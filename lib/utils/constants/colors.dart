@@ -5,6 +5,8 @@ class AppColors {
   static const Color secondary = Color(0xFF262450);
   static const Color blueButton = Color(0xFF0E39C6);
   static const Color deleteExpenseColor = Color(0xFF8A263E);
+  static const Color onBoarding2 = Color(0xFF26235c);
+  static const Color onBoarding3 = Color(0xFF353181);
 
   //REGISTER, LOGIN, ESPENSE BUTTON
   static const Color redColorGradient = Color(0xFF7B0D4F);

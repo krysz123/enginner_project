@@ -1,4 +1,5 @@
 import 'package:enginner_project/utils/constants/colors.dart';
+import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -6,8 +7,9 @@ class AppTheme {
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'Poppins',
+    fontFamily: 'Lato',
     brightness: Brightness.dark,
-    primaryColor: AppColors.primary,
+    primaryColor: AppColors.secondary,
+    textTheme: TextAppTheme.textTheme,
   );
 }
