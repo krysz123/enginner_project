@@ -132,7 +132,7 @@ class TextAppTheme {
       bodyMedium: GoogleFonts.poppins(
         textStyle: const TextStyle(
           fontSize: 14.0,
-          fontWeight: FontWeight.normal,
+          fontWeight: FontWeight.w300,
           color: AppColors.textPrimaryColor,
         ),
       ),

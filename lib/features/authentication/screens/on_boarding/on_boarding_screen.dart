@@ -1,12 +1,9 @@
-import 'package:enginner_project/features/authentication/controllers/on_boarding_controller.dart';
+import 'package:enginner_project/features/authentication/controllers/onboarding/on_boarding_controller.dart';
 import 'package:enginner_project/features/authentication/screens/on_boarding/on_boarding_page_widget.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -17,7 +14,7 @@ class OnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = DeviceUtility.getScreenHeight();
     final appBarHeight = DeviceUtility.getAppBarHeight();
-    final controller = OnBoardingController();
+    final controller = Get.put(OnBoardingController());
 
     final pages = [
       OnBoardingPage(
@@ -58,7 +55,11 @@ class OnBoardingScreen extends StatelessWidget {
             onPageChangeCallback: controller.updatePage,
             enableLoop: false,
             waveType: WaveType.circularReveal,
-            slideIconWidget: const Icon(Icons.arrow_back),
+            slideIconWidget: Obx(
+              () => controller.currentPage.value == 2
+                  ? const Icon(null)
+                  : const Icon(Icons.arrow_back),
+            ),
             positionSlideIcon: 0.85,
             fullTransitionValue: 600,
             enableSideReveal: false,

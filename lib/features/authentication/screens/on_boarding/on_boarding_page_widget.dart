@@ -1,7 +1,11 @@
+import 'package:enginner_project/common/widgets/buttons/button.dart';
+
+import 'package:enginner_project/features/authentication/screens/signup/signup.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
-import 'package:enginner_project/utils/constants/sizes.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({
@@ -24,7 +28,7 @@ class OnBoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(Sizes.sm),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
       color: color,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -44,19 +48,30 @@ class OnBoardingPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-                lastPage
-                    ? SizedBox(
-                        height: 30,
-                        width: 100,
-                        child: Container(
-                          color: AppColors.blueButton,
-                        ),
-                      )
-                    : const SizedBox(),
               ],
             ),
           ),
-          const SizedBox(height: 50)
+          if (lastPage) ...[
+            CustomButton(
+              colorGradient1: AppColors.greenColorGradient,
+              colorGradient2: AppColors.blueButton,
+              text: 'Dalej',
+              height: 50,
+              width: 160,
+              redirection: () async {
+                final shpref = await SharedPreferences.getInstance();
+                shpref.setBool("onboarding", true);
+
+                Get.offAll(
+                  () => SignupScreen(),
+                  transition: Transition.leftToRight,
+                );
+              },
+            )
+          ],
+          const SizedBox(
+            height: 50,
+          )
         ],
       ),
     );

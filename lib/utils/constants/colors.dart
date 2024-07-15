@@ -15,8 +15,12 @@ class AppColors {
   static const Color greenColorGradient = Color(0xFF27FB6B);
 
   //LOGIN, REGISTER BACKGROUND
-  static const Color loginBackgorund1 = Color(0xFF1A0064);
-  static const Color loginBackgorund2 = Color(0xFF0069CA);
+  static const Color loginBackgorund1 = Color(0xFF1a0064);
+  static const Color loginBackgorund2 = Color(0xFF170C70);
+  static const Color loginBackgorund3 = Color(0xFF131B7E);
+  static const Color loginBackgorund4 = Color(0xFF102689);
+  static const Color loginBackgorund5 = Color(0xFF0E3295);
+  static const Color loginBackgorund6 = Color(0xFF0B3C9E);
 
   //TEXT COLORS
   static const Color textPrimaryColor = Color(0xFFFFFFFF);
