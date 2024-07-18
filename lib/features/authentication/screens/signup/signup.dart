@@ -1,10 +1,12 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/authentication/controllers/signup/signup_controller.dart';
+import 'package:enginner_project/features/authentication/screens/email_verify/email_verify.dart';
+import 'package:enginner_project/features/authentication/screens/login/login.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/sizes.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -48,7 +50,7 @@ class SignupScreen extends StatelessWidget {
                 Center(
                   child: Text(
                     'Rejestracja',
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: TextAppTheme.textTheme.displaySmall,
                   ),
                 ),
                 SizedBox(
@@ -72,8 +74,12 @@ class SignupScreen extends StatelessWidget {
                               onTap: () =>
                                   controller.changeShowPasswordStatus(),
                               child: controller.isShowPasswordEnable.value
-                                  ? const Icon(Icons.remove_red_eye_outlined)
-                                  : const Icon(Icons.remove_red_eye_rounded),
+                                  ? const Icon(
+                                      Icons.remove_red_eye_outlined,
+                                      color: AppColors.textSecondaryColor,
+                                    )
+                                  : const Icon(Icons.remove_red_eye_rounded,
+                                      color: AppColors.textSecondaryColor),
                             ),
                           ),
                         ),
@@ -86,8 +92,10 @@ class SignupScreen extends StatelessWidget {
                               onTap: () =>
                                   controller.changeShowRepeatPasswordStatus(),
                               child: controller.isShowRepeatPasswordEnable.value
-                                  ? const Icon(Icons.remove_red_eye_outlined)
-                                  : const Icon(Icons.remove_red_eye_rounded),
+                                  ? const Icon(Icons.remove_red_eye_outlined,
+                                      color: AppColors.textSecondaryColor)
+                                  : const Icon(Icons.remove_red_eye_rounded,
+                                      color: AppColors.textSecondaryColor),
                             ),
                           ),
                         ),
@@ -104,11 +112,34 @@ class SignupScreen extends StatelessWidget {
                         text: 'Zarejestruj',
                         height: 50,
                         width: 200,
-                        redirection: () {},
+                        redirection: () => Get.offAll(
+                          () => const EmailVerificationScreen(),
+                        ),
                         colorGradient1: AppColors.redColorGradient,
                         colorGradient2: AppColors.blueButton,
                       ),
-                      const Text('Posiadasz konto? Zaloguj sie!'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Posiadasz konto?',
+                            style: TextAppTheme.textTheme.bodyMedium,
+                          ),
+                          const SizedBox(width: 10),
+                          GestureDetector(
+                            child: Text(
+                              "Zaloguj sie!",
+                              style:
+                                  TextAppTheme.textTheme.bodyMedium!.copyWith(
+                                color: AppColors.deleteExpenseColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () => Get.to(() => const LoginScreen(),
+                                transition: Transition.fadeIn),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

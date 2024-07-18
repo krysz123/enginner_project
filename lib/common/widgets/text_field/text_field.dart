@@ -1,5 +1,6 @@
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
+import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -36,7 +37,7 @@ class CustomTextField extends StatelessWidget {
         filled: true,
         fillColor: AppColors.primary,
         hintText: hintText,
-        hintStyle: Theme.of(context).textTheme.bodyMedium,
+        hintStyle: TextAppTheme.textTheme.bodySmall,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,

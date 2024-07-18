@@ -2,6 +2,7 @@ import 'package:enginner_project/common/widgets/buttons/button.dart';
 
 import 'package:enginner_project/features/authentication/screens/signup/signup.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
+import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,13 +40,13 @@ class OnBoardingPage extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: TextAppTheme.textTheme.headlineLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 15),
                 Text(
                   subTitle,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: TextAppTheme.textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -63,7 +64,7 @@ class OnBoardingPage extends StatelessWidget {
                 shpref.setBool("onboarding", true);
 
                 Get.offAll(
-                  () => SignupScreen(),
+                  () => const SignupScreen(),
                   transition: Transition.leftToRight,
                 );
               },

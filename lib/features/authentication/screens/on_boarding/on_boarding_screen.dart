@@ -1,7 +1,8 @@
 import 'package:enginner_project/features/authentication/controllers/onboarding/on_boarding_controller.dart';
-import 'package:enginner_project/features/authentication/screens/on_boarding/on_boarding_page_widget.dart';
+import 'package:enginner_project/features/authentication/screens/on_boarding/widgets/on_boarding_page_widget.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
+import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
@@ -72,7 +73,7 @@ class OnBoardingScreen extends StatelessWidget {
               onPressed: () => controller.skipPage(),
               child: Text(
                 'Pomiń',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: TextAppTheme.textTheme.titleSmall,
               ),
             ),
           ),

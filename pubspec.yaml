@@ -19,6 +19,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   google_fonts: ^6.2.1
   shared_preferences: ^2.2.3
+  firebase_core: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -38,5 +39,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/onboarding/
+    - assets/images/email_verify/
 
   # fonts:
