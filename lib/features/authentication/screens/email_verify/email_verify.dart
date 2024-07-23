@@ -18,6 +18,7 @@ class EmailVerificationScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
+        height: height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -34,34 +35,35 @@ class EmailVerificationScreen extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: Sizes.lg, vertical: Sizes.md),
+              horizontal: Sizes.lg, vertical: Sizes.xxl),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Image(
                 image: const AssetImage(
                     'assets/images/email_verify/email_verify.gif'),
-                height: height * 0.5,
+                height: height * 0.4,
               ),
               Text(
                 'Zweryfikuj adres email',
-                style: TextAppTheme.textTheme.headlineMedium,
+                style: TextAppTheme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
               Text(
                 'Na podany adres e-mail został wysłany link potwierdzający. Kliknij w niego aby zweryfikować swój profil',
-                style: TextAppTheme.textTheme.labelMedium,
+                style: TextAppTheme.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Sizes.lg),
                 child: CustomButton(
-                    text: 'Kontynuj',
-                    height: height * 0.08,
-                    width: width,
-                    redirection: () => Get.offAll(() => const LoginScreen()),
-                    colorGradient1: AppColors.greenColorGradient,
-                    colorGradient2: AppColors.blueButton),
+                  text: 'Kontynuj',
+                  height: height * 0.08,
+                  width: width,
+                  redirection: () => Get.offAll(() => const LoginScreen()),
+                  colorGradient1: AppColors.greenColorGradient,
+                  colorGradient2: AppColors.blueButton,
+                ),
               )
             ],
           ),

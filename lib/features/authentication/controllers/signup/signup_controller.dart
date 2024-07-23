@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
@@ -13,4 +14,13 @@ class SignupController extends GetxController {
   void changeShowRepeatPasswordStatus() {
     isShowRepeatPasswordEnable.value = !isShowRepeatPasswordEnable.value;
   }
+
+  // -- SIGNUP
+
+  final emial = TextEditingController();
+  final lastName = TextEditingController();
+  final firstName = TextEditingController();
+  final password = TextEditingController();
+  final repeatPassword = TextEditingController();
+  GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 }

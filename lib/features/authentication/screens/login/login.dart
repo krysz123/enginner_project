@@ -1,9 +1,7 @@
+import 'package:enginner_project/common/widgets/account_link_text.dart';
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/authentication/controllers/login/login_controller.dart';
-import 'package:enginner_project/features/authentication/controllers/signup/signup_controller.dart';
-import 'package:enginner_project/features/authentication/screens/email_verify/email_verify.dart';
-import 'package:enginner_project/features/authentication/screens/login/login.dart';
 import 'package:enginner_project/features/authentication/screens/signup/signup.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/sizes.dart';
@@ -23,113 +21,93 @@ class LoginScreen extends StatelessWidget {
     final controller = Get.put(LoginController());
 
     return Scaffold(
-      body: Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.loginBackgorund1.withOpacity(0.4),
-              AppColors.loginBackgorund1,
-              AppColors.loginBackgorund2,
-              AppColors.loginBackgorund3,
-              AppColors.loginBackgorund4,
-              AppColors.loginBackgorund5,
-            ],
+      body: SafeArea(
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.loginBackgorund1.withOpacity(0.4),
+                AppColors.loginBackgorund1,
+                AppColors.loginBackgorund2,
+                AppColors.loginBackgorund3,
+                AppColors.loginBackgorund4,
+                AppColors.loginBackgorund5,
+              ],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Sizes.lg, vertical: Sizes.sm),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: height * 0.1,
-                ),
-                Center(
-                  child: Text(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Sizes.lg, vertical: Sizes.xxl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
                     'Logowanie',
                     style: TextAppTheme.textTheme.displaySmall,
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.05,
-                ),
-                SizedBox(
-                  height: height * 0.45,
-                  child: Form(
-                    child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const CustomTextField(hintText: 'E-mail'),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Obx(
-                          () => CustomTextField(
-                            hintText: 'Hasło',
-                            isObscureText:
-                                controller.isShowPasswordEnableLogin.value,
-                            suffixIcon: GestureDetector(
-                              onTap: () =>
-                                  controller.changeShowPasswordStatus(),
-                              child: controller.isShowPasswordEnableLogin.value
-                                  ? const Icon(
-                                      Icons.remove_red_eye_outlined,
-                                      color: AppColors.textSecondaryColor,
-                                    )
-                                  : const Icon(Icons.remove_red_eye_rounded,
-                                      color: AppColors.textSecondaryColor),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: height * 0.3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomButton(
-                        text: 'Zaloguj',
-                        height: 50,
-                        width: 200,
-                        redirection: () =>
-                            Get.snackbar("Lgownaie", "Zaloguj sie"),
-                        colorGradient1: AppColors.redColorGradient,
-                        colorGradient2: AppColors.blueButton,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Sizes.xxl),
+                    child: Form(
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            'Nie posiadasz konta?',
-                            style: TextAppTheme.textTheme.bodyMedium,
-                          ),
-                          const SizedBox(width: 10),
-                          GestureDetector(
-                            child: Text(
-                              "Zarejestruj sie!",
-                              style:
-                                  TextAppTheme.textTheme.bodyMedium!.copyWith(
-                                color: AppColors.deleteExpenseColor,
-                                fontWeight: FontWeight.bold,
+                          const CustomTextField(hintText: 'E-mail'),
+                          Obx(
+                            () => CustomTextField(
+                              hintText: 'Hasło',
+                              isObscureText:
+                                  controller.isShowPasswordEnableLogin.value,
+                              suffixIcon: GestureDetector(
+                                onTap: () =>
+                                    controller.changeShowPasswordStatus(),
+                                child: controller
+                                        .isShowPasswordEnableLogin.value
+                                    ? const Icon(
+                                        Icons.remove_red_eye_outlined,
+                                        color: AppColors.textSecondaryColor,
+                                      )
+                                    : const Icon(Icons.remove_red_eye_rounded,
+                                        color: AppColors.textSecondaryColor),
                               ),
                             ),
-                            onTap: () => Get.to(() => const SignupScreen(),
-                                transition: Transition.fadeIn),
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(height: height * 0.25),
+                  CustomButton(
+                    text: 'Zaloguj',
+                    height: 50,
+                    width: 200,
+                    redirection: () => Get.snackbar(
+                      "Lgownaie",
+                      "Zaloguj sie",
+                      animationDuration: const Duration(milliseconds: 500),
+                      icon: const Icon(
+                        Icons.abc_outlined,
+                        size: 30,
+                      ),
+                    ),
+                    colorGradient1: AppColors.redColorGradient,
+                    colorGradient2: AppColors.blueButton,
+                  ),
+                  SizedBox(height: height * 0.05),
+                  AccountLinkText(
+                    text: 'Nie posiadasz konta?',
+                    textLink: 'Zarejestruj sie!',
+                    redirection: () => Get.to(
+                      () => const SignupScreen(),
+                      transition: Transition.fadeIn,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -15,7 +15,8 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       darkTheme: AppTheme.darkTheme,
-      home: onboarding ? SignupScreen() : const OnBoardingScreen(),
+      title: 'WalletWatch',
+      home: onboarding ? const SignupScreen() : const OnBoardingScreen(),
     );
   }
 }
