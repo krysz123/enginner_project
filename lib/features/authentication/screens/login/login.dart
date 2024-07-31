@@ -2,9 +2,11 @@ import 'package:enginner_project/common/widgets/account_link_text.dart';
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/authentication/controllers/login/login_controller.dart';
+import 'package:enginner_project/features/authentication/screens/login/widgets/login_form.dart';
 import 'package:enginner_project/features/authentication/screens/signup/signup.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/sizes.dart';
+import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,6 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = DeviceUtility.getScreenHeight();
     final width = DeviceUtility.getScreenWidth(context);
-    final controller = Get.put(LoginController());
 
     return Scaffold(
       body: SafeArea(
@@ -50,58 +51,11 @@ class LoginScreen extends StatelessWidget {
                     'Logowanie',
                     style: TextAppTheme.textTheme.displaySmall,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Sizes.xxl),
-                    child: Form(
-                      child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const CustomTextField(hintText: 'E-mail'),
-                          Obx(
-                            () => CustomTextField(
-                              hintText: 'Hasło',
-                              isObscureText:
-                                  controller.isShowPasswordEnableLogin.value,
-                              suffixIcon: GestureDetector(
-                                onTap: () =>
-                                    controller.changeShowPasswordStatus(),
-                                child: controller
-                                        .isShowPasswordEnableLogin.value
-                                    ? const Icon(
-                                        Icons.remove_red_eye_outlined,
-                                        color: AppColors.textSecondaryColor,
-                                      )
-                                    : const Icon(Icons.remove_red_eye_rounded,
-                                        color: AppColors.textSecondaryColor),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: height * 0.25),
-                  CustomButton(
-                    text: 'Zaloguj',
-                    height: 50,
-                    width: 200,
-                    redirection: () => Get.snackbar(
-                      "Lgownaie",
-                      "Zaloguj sie",
-                      animationDuration: const Duration(milliseconds: 500),
-                      icon: const Icon(
-                        Icons.abc_outlined,
-                        size: 30,
-                      ),
-                    ),
-                    colorGradient1: AppColors.redColorGradient,
-                    colorGradient2: AppColors.blueButton,
-                  ),
-                  SizedBox(height: height * 0.05),
+                  const LoginForm(),
                   AccountLinkText(
                     text: 'Nie posiadasz konta?',
                     textLink: 'Zarejestruj sie!',
-                    redirection: () => Get.to(
+                    redirection: () => Get.offAll(
                       () => const SignupScreen(),
                       transition: Transition.fadeIn,
                     ),

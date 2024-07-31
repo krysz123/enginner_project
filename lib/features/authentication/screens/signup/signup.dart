@@ -1,9 +1,8 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
-import 'package:enginner_project/common/widgets/text_field/text_field.dart';
-import 'package:enginner_project/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:enginner_project/features/authentication/screens/email_verify/email_verify.dart';
 import 'package:enginner_project/features/authentication/screens/login/login.dart';
 import 'package:enginner_project/common/widgets/account_link_text.dart';
+import 'package:enginner_project/features/authentication/screens/signup/widgets/signup_form.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/sizes.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
@@ -18,7 +17,6 @@ class SignupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = DeviceUtility.getScreenHeight();
     final width = DeviceUtility.getScreenWidth(context);
-    final controller = Get.put(SignupController());
 
     return Scaffold(
       body: SafeArea(
@@ -50,68 +48,11 @@ class SignupScreen extends StatelessWidget {
                     'Rejestracja',
                     style: TextAppTheme.textTheme.displaySmall,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Sizes.xxl),
-                    child: Form(
-                      child: Column(
-                        children: [
-                          const CustomTextField(hintText: 'Imie'),
-                          const CustomTextField(hintText: 'Nazwisko'),
-                          const CustomTextField(hintText: 'E-mail'),
-                          Obx(
-                            () => CustomTextField(
-                              hintText: 'Hasło',
-                              isObscureText:
-                                  controller.isShowPasswordEnable.value,
-                              suffixIcon: GestureDetector(
-                                onTap: () =>
-                                    controller.changeShowPasswordStatus(),
-                                child: controller.isShowPasswordEnable.value
-                                    ? const Icon(
-                                        Icons.remove_red_eye_outlined,
-                                        color: AppColors.textSecondaryColor,
-                                      )
-                                    : const Icon(Icons.remove_red_eye_rounded,
-                                        color: AppColors.textSecondaryColor),
-                              ),
-                            ),
-                          ),
-                          Obx(
-                            () => CustomTextField(
-                              hintText: 'Powtórz hasło',
-                              isObscureText:
-                                  controller.isShowRepeatPasswordEnable.value,
-                              suffixIcon: GestureDetector(
-                                onTap: () =>
-                                    controller.changeShowRepeatPasswordStatus(),
-                                child: controller
-                                        .isShowRepeatPasswordEnable.value
-                                    ? const Icon(Icons.remove_red_eye_outlined,
-                                        color: AppColors.textSecondaryColor)
-                                    : const Icon(Icons.remove_red_eye_rounded,
-                                        color: AppColors.textSecondaryColor),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  CustomButton(
-                    text: 'Zarejestruj',
-                    height: 50,
-                    width: 200,
-                    redirection: () => Get.offAll(
-                      () => const EmailVerificationScreen(),
-                    ),
-                    colorGradient1: AppColors.redColorGradient,
-                    colorGradient2: AppColors.blueButton,
-                  ),
-                  SizedBox(height: height * 0.05),
+                  const SignupForm(),
                   AccountLinkText(
                     text: 'Posiadasz konto?',
                     textLink: 'Zaloguj sie!',
-                    redirection: () => Get.to(
+                    redirection: () => Get.offAll(
                       () => const LoginScreen(),
                       transition: Transition.fadeIn,
                     ),

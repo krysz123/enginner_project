@@ -31,13 +31,11 @@ class OnBoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = DeviceUtility.getScreenHeight();
-    final width = DeviceUtility.getScreenWidth(context);
     return Container(
       padding:
           const EdgeInsets.symmetric(horizontal: Sizes.xl, vertical: Sizes.xxl),
       color: color,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Image(image: AssetImage(image), height: height * 0.4),
           Center(
@@ -64,8 +62,8 @@ class OnBoardingPage extends StatelessWidget {
                       height: 50,
                       width: 160,
                       redirection: () async {
-                        final shpref = await SharedPreferences.getInstance();
-                        shpref.setBool("onboarding", true);
+                        // final shpref = await SharedPreferences.getInstance();
+                        // shpref.setBool("onboarding", true);
 
                         Get.offAll(
                           () => const SignupScreen(),

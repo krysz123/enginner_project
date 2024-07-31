@@ -1,8 +1,6 @@
-import 'package:enginner_project/features/authentication/screens/login/login.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class AccountLinkText extends StatelessWidget {
   const AccountLinkText({
