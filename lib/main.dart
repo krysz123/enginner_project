@@ -11,14 +11,6 @@ void main() async {
   //?ONBOARDING
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  //?FIRST TIME ONBOARDING
-  // final prefs = await SharedPreferences.getInstance();
-  // if (prefs.getBool('onboarding') == null) {
-  //   prefs.setBool('onboarding', false);
-  // } else {
-  //   prefs.setBool('onboarding', true);
-  // }
-
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   //?FIREBASE
