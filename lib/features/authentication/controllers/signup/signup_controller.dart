@@ -52,6 +52,7 @@ class SignupController extends GetxController {
         firstname: firstName.text.trim(),
         lastname: lastName.text.trim(),
         phoneNumber: phoneNumber.text.trim(),
+        totalBalance: 0.0,
       );
 
       final userRepository = Get.put(UserRepository());

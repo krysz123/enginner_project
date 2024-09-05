@@ -1,37 +1,38 @@
+import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomDrawerHeader extends StatelessWidget {
-  const CustomDrawerHeader({
-    super.key,
-  });
+  const CustomDrawerHeader({super.key, required this.controller});
+
+  final UserController controller;
 
   @override
   Widget build(BuildContext context) {
-    return const DrawerHeader(
-      decoration: BoxDecoration(
+    final controller = Get.put(UserController());
+    return DrawerHeader(
+      decoration: const BoxDecoration(
         color: AppColors.secondary,
       ),
       child: Column(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 40,
             child: Icon(
               Icons.person,
               size: 40,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: Sizes.sm,
             ),
-            child: Text(
-              'Konrad Rysz',
-            ),
+            child: Obx(() => Text(controller.user.value.fullname)),
           ),
         ],
       ),

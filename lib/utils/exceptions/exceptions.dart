@@ -8,22 +8,26 @@ class Exceptions implements Exception {
   factory Exceptions.fromCode(String code) {
     switch (code) {
       case 'email-already-in-use':
-        return const Exceptions('Adres e-mail jest już zarejestrowany..');
+        return const Exceptions(
+            'Adres e-mail jest już zarejestrowany. Proszę użyć innego adresu e-mail.');
       case 'invalid-email':
-        return const Exceptions('Podany adres e-mail jest nieprawidłowy.');
-      case 'email-already-exists':
-        return const Exceptions('Adres e-mail już istnieje.');
+        return const Exceptions(
+            'Podany adres e-mail jest nieprawidłowy. Proszę wprowadzić prawidłowy adres e-mail.');
       case 'weak-password':
         return const Exceptions(
             'Hasło jest zbyt słabe. Proszę wybrać silniejsze hasło.');
       case 'user-disabled':
-        return const Exceptions('To konto użytkownika zostało zablokowane.');
+        return const Exceptions(
+            'To konto użytkownika zostało zablokowane. Proszę skontaktować się z pomocą techniczną.');
       case 'user-not-found':
-        return const Exceptions('Nieprawidłowe dane logowania.');
+        return const Exceptions(
+            'Nieprawidłowe dane logowania. Użytkownik nie znaleziony.');
       case 'wrong-password':
-        return const Exceptions('Nieprawidłowe hasło.');
+        return const Exceptions(
+            'Nieprawidłowe hasło. Proszę sprawdzić hasło i spróbować ponownie.');
       case 'INVALID_LOGIN_CREDENTIALS':
-        return const Exceptions('Nieprawidłowe dane logowania.');
+        return const Exceptions(
+            'Nieprawidłowe dane logowania. Proszę dokładnie sprawdzić swoje informacje.');
       case 'too-many-requests':
         return const Exceptions(
             'Zbyt wiele żądań. Proszę spróbować ponownie później.');
@@ -31,7 +35,8 @@ class Exceptions implements Exception {
         return const Exceptions(
             'Nieprawidłowy argument przekazany do metody uwierzytelnienia.');
       case 'invalid-password':
-        return const Exceptions('Nieprawidłowe hasło.');
+        return const Exceptions(
+            'Nieprawidłowe hasło. Proszę spróbować ponownie.');
       case 'invalid-phone-number':
         return const Exceptions('Podany numer telefonu jest nieprawidłowy.');
       case 'operation-not-allowed':
