@@ -6,13 +6,13 @@ class CustomPlatformException implements Exception {
   String get message {
     switch (code) {
       case 'INVALID_LOGIN_CREDENTIALS':
-        return 'Nieprawidłowe dane logowania.';
+        return 'Nieprawidłowe dane logowania. Proszę dokładnie sprawdzić swoje informacje.';
       case 'too-many-requests':
         return 'Zbyt wiele żądań. Proszę spróbować ponownie później.';
       case 'invalid-argument':
         return 'Nieprawidłowy argument przekazany do metody uwierzytelnienia.';
       case 'invalid-password':
-        return 'Nieprawidłowe hasło.';
+        return 'Nieprawidłowe hasło. Proszę spróbować ponownie.';
       case 'invalid-phone-number':
         return 'Podany numer telefonu jest nieprawidłowy.';
       case 'operation-not-allowed':
@@ -22,7 +22,7 @@ class CustomPlatformException implements Exception {
       case 'uid-already-exists':
         return 'Podany identyfikator użytkownika jest już używany przez innego użytkownika.';
       case 'sign_in_failed':
-        return 'Logowanie nie powiodło się.';
+        return 'Logowanie nie powiodło się. Proszę spróbować ponownie.';
       case 'network-request-failed':
         return 'Żądanie sieciowe nie powiodło się. Proszę sprawdzić swoje połączenie internetowe.';
       case 'internal-error':
@@ -30,11 +30,11 @@ class CustomPlatformException implements Exception {
       case 'invalid-verification-code':
         return 'Nieprawidłowy kod weryfikacyjny. Proszę wprowadzić prawidłowy kod.';
       case 'invalid-verification-id':
-        return 'Nieprawidłowy identyfikator weryfikacyjny.';
+        return 'Nieprawidłowy identyfikator weryfikacyjny. Proszę poprosić o nowy kod weryfikacyjny.';
       case 'quota-exceeded':
         return 'Przekroczono limit. Proszę spróbować ponownie później.';
       default:
-        return 'Wystąpił nieoczekiwany błąd. Proszę spróbować ponownie.';
+        return 'Wystąpił nieoczekiwany błąd platformy. Proszę spróbować ponownie.';
     }
   }
 }

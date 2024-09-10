@@ -22,24 +22,24 @@ class LoginScreen extends StatelessWidget {
     final width = DeviceUtility.getScreenWidth(context);
 
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          height: height,
-          width: width,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                AppColors.loginBackgorund1.withOpacity(0.4),
-                AppColors.loginBackgorund1,
-                AppColors.loginBackgorund2,
-                AppColors.loginBackgorund3,
-                AppColors.loginBackgorund4,
-                AppColors.loginBackgorund5,
-              ],
-            ),
+      body: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.loginBackgorund1.withOpacity(0.4),
+              AppColors.loginBackgorund1,
+              AppColors.loginBackgorund2,
+              AppColors.loginBackgorund3,
+              AppColors.loginBackgorund4,
+              AppColors.loginBackgorund5,
+            ],
           ),
+        ),
+        child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(

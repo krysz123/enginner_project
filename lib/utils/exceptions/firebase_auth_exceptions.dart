@@ -6,25 +6,25 @@ class CustomFirebaseAuthException implements Exception {
   String get message {
     switch (code) {
       case 'email-already-in-use':
-        return 'Adres e-mail jest już zarejestrowany.';
+        return 'Adres e-mail jest już zarejestrowany. Proszę użyć innego adresu e-mail.';
       case 'invalid-email':
-        return 'Podany adres e-mail jest nieprawidłowy.';
+        return 'Podany adres e-mail jest nieprawidłowy. Proszę wprowadzić prawidłowy adres e-mail.';
       case 'weak-password':
         return 'Hasło jest zbyt słabe. Proszę wybrać silniejsze hasło.';
       case 'user-disabled':
-        return 'To konto użytkownika zostało zablokowane.';
+        return 'To konto użytkownika zostało zablokowane. Proszę skontaktować się z pomocą techniczną.';
       case 'user-not-found':
-        return 'Nieprawidłowe dane logowania.';
+        return 'Nieprawidłowe dane logowania. Użytkownik nie znaleziony.';
       case 'wrong-password':
-        return 'Nieprawidłowe hasło.';
+        return 'Nieprawidłowe hasło. Proszę sprawdzić hasło i spróbować ponownie.';
       case 'invalid-verification-code':
-        return 'Nieprawidłowy kod weryfikacyjny.';
+        return 'Nieprawidłowy kod weryfikacyjny. Proszę wprowadzić prawidłowy kod.';
       case 'invalid-verification-id':
-        return 'Nieprawidłowy identyfikator weryfikacyjny.';
+        return 'Nieprawidłowy identyfikator weryfikacyjny. Proszę poprosić o nowy kod weryfikacyjny.';
       case 'quota-exceeded':
         return 'Przekroczono limit. Proszę spróbować ponownie później.';
       case 'email-already-exists':
-        return 'Adres e-mail już istnieje.';
+        return 'Adres e-mail już istnieje. Proszę użyć innego adresu e-mail.';
       case 'provider-already-linked':
         return 'Konto jest już połączone z innym dostawcą.';
       case 'requires-recent-login':

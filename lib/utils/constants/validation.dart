@@ -66,5 +66,27 @@ class Validator {
     return null;
   }
 
-  // Dodaj więcej niestandardowych walidatorów w zależności od specyficznych wymagań.
+  static String? validateNumbersOnly(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Wartość jest wymagana';
+    }
+
+    final numbersOnlyRegExp = RegExp(r'^\d+([.,]\d+)?$');
+
+    if (!numbersOnlyRegExp.hasMatch(value)) {
+      return 'Wartość może zawierać tylko liczby całkowite lub zmiennoprzecinkowe';
+    }
+
+    return null;
+  }
+
+  static String? validateDropdownSelection(String? value) {
+    const defaultOption = null;
+
+    if (value == null || value == defaultOption) {
+      return 'Proszę wybrać opcję.';
+    }
+
+    return null;
+  }
 }
