@@ -13,7 +13,9 @@ class NavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SideBarController());
+    // final balanceControler = Get.put(BalanceController());
     final userController = Get.put(UserController());
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColors.primary,

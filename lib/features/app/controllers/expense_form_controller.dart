@@ -63,17 +63,18 @@ class ExpenseFormController extends GetxController {
       final parsedAmount = double.parse(amount.text.trim());
 
       final newExpense = ExpenseModel(
-          id: transactionId,
-          amount: parsedAmount,
-          category: selectedCategory.trim(),
-          date: time.text.trim(),
-          description: description.text.trim(),
-          expenseType: 'expense',
-          title: title.text.trim());
-
+        id: transactionId,
+        title: title.text.trim(),
+        amount: parsedAmount,
+        category: selectedCategory.trim(),
+        date: time.text.trim(),
+        description: description.text.trim(),
+        expenseType: 'Wydatek',
+        paymentType: selectedPaymentType.trim(),
+      );
       await userRepository.saveExpenseRecord(newExpense);
-
-      final balance = userController.user.value.totalBalance - parsedAmount;
+      // final balanceController = BalanceController.instance;
+      final balance = userController.totalBalance.value - parsedAmount;
 
       userController.user.update((user) {
         user!.totalBalance -= parsedAmount;
@@ -104,17 +105,18 @@ class ExpenseFormController extends GetxController {
       final parsedAmount = double.parse(amount.text.trim());
 
       final newIncome = ExpenseModel(
-          id: transactionId,
-          amount: parsedAmount,
-          category: selectedCategory.trim(),
-          date: time.text.trim(),
-          description: description.text.trim(),
-          expenseType: 'income',
-          title: title.text.trim());
+        id: transactionId,
+        amount: parsedAmount,
+        category: selectedCategory.trim(),
+        date: time.text.trim(),
+        description: description.text.trim(),
+        expenseType: 'income',
+        title: title.text.trim(),
+        paymentType: selectedPaymentType.trim(),
+      );
 
       await userRepository.saveExpenseRecord(newIncome);
-
-      final balance = userController.user.value.totalBalance + parsedAmount;
+      final balance = userController.totalBalance.value + parsedAmount;
 
       userController.user.update((user) {
         user!.totalBalance += parsedAmount;

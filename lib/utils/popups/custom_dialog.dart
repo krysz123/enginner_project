@@ -11,46 +11,49 @@ import 'package:get/get.dart';
 class CustomDialog {
   final height = DeviceUtility.getScreenHeight();
 
-  static customDialog({required title, required subtitle, required widget}) {
-    Get.dialog(SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 30),
-        child: Material(
-          color: AppColors.secondary,
-          borderRadius: BorderRadius.circular(30),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.add,
-                      size: 30,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextAppTheme.textTheme.titleLarge,
-                        ),
-                        Text(
-                          subtitle,
-                          style: TextAppTheme.textTheme.labelMedium,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 100),
-                  ],
-                ),
-                widget,
-              ],
+  static customDialog(
+      {required title, required subtitle, required widget, required icon}) {
+    Get.dialog(Center(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 30),
+          child: Material(
+            color: AppColors.secondary,
+            borderRadius: BorderRadius.circular(30),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        icon,
+                        size: 30,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: TextAppTheme.textTheme.titleLarge,
+                          ),
+                          Text(
+                            subtitle,
+                            style: TextAppTheme.textTheme.labelMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                  widget,
+                ],
+              ),
             ),
           ),
         ),

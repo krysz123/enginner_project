@@ -8,10 +8,14 @@ class UserController extends GetxController {
   Rx<UserModel> user = UserModel.empty().obs;
   final userRepository = Get.put(UserRepository());
 
+  Rx<double> totalBalance = 0.0.obs;
   @override
   void onInit() {
     super.onInit();
     fetchUserRecord();
+    userRepository.streamTotalBalance().listen((event) {
+      totalBalance.value = event;
+    });
   }
 
   Future<void> fetchUserRecord() async {

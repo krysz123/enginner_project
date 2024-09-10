@@ -71,11 +71,12 @@ class Validator {
       return 'Wartość jest wymagana';
     }
 
-    final numbersOnlyRegExp = RegExp(r'^\d+$');
+    final numbersOnlyRegExp = RegExp(r'^\d+([.,]\d+)?$');
 
     if (!numbersOnlyRegExp.hasMatch(value)) {
-      return 'Wartość może zawierać tylko cyfry';
+      return 'Wartość może zawierać tylko liczby całkowite lub zmiennoprzecinkowe';
     }
+
     return null;
   }
 

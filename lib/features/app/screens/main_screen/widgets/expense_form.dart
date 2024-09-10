@@ -3,7 +3,6 @@ import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/app/controllers/expense_form_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,14 +11,14 @@ class ExpenseForm extends StatelessWidget {
     super.key,
   });
   final categories = [
-    const DropdownMenuItem(value: 'czynsz', child: Text('Czynsz')),
+    const DropdownMenuItem(value: 'Czynsz', child: Text('Czynsz')),
     const DropdownMenuItem(
-        value: 'ubezpieczenie', child: Text('Ubezpieczenie')),
-    const DropdownMenuItem(value: 'zywnosc', child: Text('Żywność')),
-    const DropdownMenuItem(value: 'transport', child: Text('Transport')),
-    const DropdownMenuItem(value: 'odziez', child: Text('Odzież')),
+        value: 'Ubezpieczenie', child: Text('Ubezpieczenie')),
+    const DropdownMenuItem(value: 'Żywność', child: Text('Żywność')),
+    const DropdownMenuItem(value: 'Transport', child: Text('Transport')),
+    const DropdownMenuItem(value: 'Odzież', child: Text('Odzież')),
     const DropdownMenuItem(
-        value: 'zakupy_spozywcze', child: Text('Zakupy spożywcze')),
+        value: 'Zakupy spożywcze', child: Text('Zakupy spożywcze')),
   ];
 
   @override
@@ -73,12 +72,13 @@ class ExpenseForm extends StatelessWidget {
                 : controller.selectedPaymentType.value,
             hint: const Text('Rodzaj płatności'),
             dropdownColor: AppColors.primary,
+            onChanged: (value) => controller.changePaymentType(value),
             validator: (value) => Validator.validateDropdownSelection(value),
             items: const [
-              DropdownMenuItem(value: 'karta', child: Text('Karta kredytowa')),
-              DropdownMenuItem(value: 'gotowka', child: Text('Gotówka')),
+              DropdownMenuItem(
+                  value: 'Karta kredytowa', child: Text('Karta kredytowa')),
+              DropdownMenuItem(value: 'Gotówka', child: Text('Gotówka')),
             ],
-            onChanged: (value) => controller.changePaymentType(value),
           ),
           Row(
             children: [

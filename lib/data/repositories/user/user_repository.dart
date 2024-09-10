@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
+import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/models/user_model.dart';
 import 'package:enginner_project/utils/exceptions/firebase_auth_exceptions.dart';
@@ -65,8 +66,6 @@ class UserRepository extends GetxController {
           .collection("Transactions")
           .doc(model.id)
           .set(model.toJson());
-
-      print('zaostal zapisany wydatek');
     } on FirebaseAuthException catch (e) {
       throw CustomFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {
@@ -86,7 +85,95 @@ class UserRepository extends GetxController {
           .collection("Users")
           .doc(AuthenticationRepository.instance.authUser?.uid)
           .update(json);
-      print('tutaj zostal uzyty update');
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<List<ExpenseModel>> fetchAllTransactions() async {
+    try {
+      // Pobranie dokumentów transakcji dla zalogowanego użytkownika
+      final querySnapshot = await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Transactions")
+          .orderBy('Date', descending: true) // Sortowanie według daty
+          .get();
+
+      // Mapowanie wyników na listę modeli ExpenseModel
+      return querySnapshot.docs
+          .map((doc) => ExpenseModel.fromSnapshot(doc))
+          .toList();
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Stream<double> streamTotalBalance() {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .snapshots()
+        .map((snapshot) {
+      // Sprawdzenie czy dokument istnieje i czy posiada pole TotalBalance
+      final data = snapshot.data();
+      if (data != null && data.containsKey('TotalBalance')) {
+        return data['TotalBalance'].toDouble();
+      } else {
+        return 0.0; // Wartość domyślna, jeśli brak danych
+      }
+    });
+  }
+
+  Stream<List<ExpenseModel>> streamAllTransactions() {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("Transactions")
+        .orderBy('Date', descending: true)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => ExpenseModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Future<void> deleteExpense(
+      String expenseType, String transactionId, double amount) async {
+    try {
+      _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Transactions")
+          .doc(transactionId)
+          .delete();
+
+      final userController = UserController.instance;
+      double balance = 0;
+
+      if (expenseType == 'income') {
+        balance = userController.totalBalance.value - amount;
+      } else {
+        balance = userController.totalBalance.value + amount;
+      }
+
+      Map<String, dynamic> deletedValue = {'TotalBalance': balance};
+      await updateSingleField(deletedValue);
     } on FirebaseAuthException catch (e) {
       throw CustomFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {

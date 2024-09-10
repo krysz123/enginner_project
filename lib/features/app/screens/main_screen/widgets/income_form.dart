@@ -3,7 +3,6 @@ import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/app/controllers/expense_form_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,9 +12,9 @@ class IncomeForm extends StatelessWidget {
   });
   final categories = [
     const DropdownMenuItem(
-        value: 'wynagrodzenie', child: Text('Wynagrodzenie')),
-    const DropdownMenuItem(value: 'renta', child: Text('Renta')),
-    const DropdownMenuItem(value: 'podatki', child: Text('Podatki')),
+        value: 'Wynagrodzenie', child: Text('Wynagrodzenie')),
+    const DropdownMenuItem(value: 'Renta', child: Text('Renta')),
+    const DropdownMenuItem(value: 'Podatki', child: Text('Podatki')),
     // const DropdownMenuItem(value: 'podatki', child: Text('Podatki')),
   ];
 

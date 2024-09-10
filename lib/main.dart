@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enginner_project/app.dart';
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:enginner_project/firebase_options.dart';
