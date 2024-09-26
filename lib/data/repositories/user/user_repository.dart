@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/models/expense_model.dart';
+import 'package:enginner_project/models/loyalty_card_model.dart';
+import 'package:enginner_project/models/saving_goal_model.dart';
 import 'package:enginner_project/models/user_model.dart';
 import 'package:enginner_project/utils/exceptions/firebase_auth_exceptions.dart';
 import 'package:enginner_project/utils/exceptions/firebase_exceptions.dart';
@@ -18,7 +20,6 @@ class UserRepository extends GetxController {
   Future<void> saveUserRecord(UserModel user) async {
     try {
       await _db.collection("Users").doc(user.id).set(user.toJson());
-      // await _db.collection("Users").doc(user.id).collection("Expense").doc(expense.id).set(expense.toJson)); cos takiego chyba
     } on FirebaseAuthException catch (e) {
       throw CustomFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {
@@ -58,8 +59,6 @@ class UserRepository extends GetxController {
 
   Future<void> saveExpenseRecord(ExpenseModel model) async {
     try {
-      // _db.settings = const Settings(persistenceEnabled: true);
-
       _db
           .collection("Users")
           .doc(AuthenticationRepository.instance.authUser?.uid)
@@ -100,15 +99,13 @@ class UserRepository extends GetxController {
 
   Future<List<ExpenseModel>> fetchAllTransactions() async {
     try {
-      // Pobranie dokumentów transakcji dla zalogowanego użytkownika
       final querySnapshot = await _db
           .collection("Users")
           .doc(AuthenticationRepository.instance.authUser?.uid)
           .collection("Transactions")
-          .orderBy('Date', descending: true) // Sortowanie według daty
+          .orderBy('Date', descending: true)
           .get();
 
-      // Mapowanie wyników na listę modeli ExpenseModel
       return querySnapshot.docs
           .map((doc) => ExpenseModel.fromSnapshot(doc))
           .toList();
@@ -131,12 +128,11 @@ class UserRepository extends GetxController {
         .doc(AuthenticationRepository.instance.authUser?.uid)
         .snapshots()
         .map((snapshot) {
-      // Sprawdzenie czy dokument istnieje i czy posiada pole TotalBalance
       final data = snapshot.data();
       if (data != null && data.containsKey('TotalBalance')) {
         return data['TotalBalance'].toDouble();
       } else {
-        return 0.0; // Wartość domyślna, jeśli brak danych
+        return 0.0;
       }
     });
   }
@@ -166,14 +162,165 @@ class UserRepository extends GetxController {
       final userController = UserController.instance;
       double balance = 0;
 
-      if (expenseType == 'income') {
+      if (expenseType == 'Przychód') {
         balance = userController.totalBalance.value - amount;
       } else {
         balance = userController.totalBalance.value + amount;
       }
 
+      userController.cancelMonthlyTask(transactionId);
+
       Map<String, dynamic> deletedValue = {'TotalBalance': balance};
       await updateSingleField(deletedValue);
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> saveLoyaltyCard(LoyaltyCardModel model) async {
+    try {
+      _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("LoyaltyCards")
+          .doc(model.id)
+          .set(model.toJson());
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Stream<List<LoyaltyCardModel>> streamAllLoyaltyCards() {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("LoyaltyCards")
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => LoyaltyCardModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Future<void> deleteLoyaltyCard(String loyaltyCardId) async {
+    try {
+      _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("LoyaltyCards")
+          .doc(loyaltyCardId)
+          .delete();
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> saveSavingGoal(SavingGoalModel model) async {
+    try {
+      _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("SavingGoals")
+          .doc(model.id)
+          .set(model.toJson());
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Stream<List<SavingGoalModel>> streamAllSavingGoals() {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("SavingGoals")
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => SavingGoalModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  // Stream<double> streamSavingGoalProgress() {
+  //   return _db
+  //       .collection("Users")
+  //       .doc(AuthenticationRepository.instance.authUser?.uid)
+  //       .collection("SavingGoals")
+  //       .doc()
+  //       .snapshots()
+  //       .map((snapshot) {
+  //     final data = snapshot.data();
+  //     if (data != null && data.containsKey('CurrentAmount')) {
+  //       return data['CurrentAmount'];
+  //     } else {
+  //       return 0.0;
+  //     }
+  //   });
+  // }
+
+  Future<void> addAmount(String documentId, double amount) async {
+    try {
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("SavingGoals")
+          .doc(documentId)
+          .update(
+        {
+          'CurrentAmount': FieldValue.increment(amount),
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> updateEndedSavingGoal(
+      Map<String, dynamic> json, String documentId) async {
+    try {
+      _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection('SavingGoals')
+          .doc(documentId)
+          .update(json);
     } on FirebaseAuthException catch (e) {
       throw CustomFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {

@@ -3,6 +3,7 @@ import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/app/controllers/expense_form_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
+import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,6 +56,26 @@ class ExpenseForm extends StatelessWidget {
               controller.selectDate(context);
             },
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              children: [
+                Text(
+                  'Wydatek stały',
+                  style: TextAppTheme.textTheme.titleMedium!
+                      .copyWith(color: AppColors.textSecondaryColor),
+                ),
+                const Spacer(),
+                Obx(
+                  () => Checkbox(
+                    value: controller.isChecked.value,
+                    onChanged: (value) => controller.changeCheckbox(value),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: AppColors.textSecondaryColor),
           DropdownButtonFormField(
             value: controller.selectedCategory.value.isEmpty
                 ? null

@@ -20,11 +20,17 @@ class ExpenseFormController extends GetxController {
   Rx<String> selectedCategory = ''.obs;
   Rx<String> selectedPaymentType = ''.obs;
 
+  Rx<bool> isChecked = false.obs;
+
   GlobalKey<FormState> expenseFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> incomeFormKey = GlobalKey<FormState>();
 
   final userController = UserController.instance;
   final userRepository = UserRepository.instance;
+
+  changeCheckbox(value) {
+    isChecked.value = value;
+  }
 
   changeCategory(value) {
     selectedCategory.value = value;
@@ -83,6 +89,10 @@ class ExpenseFormController extends GetxController {
       Map<String, dynamic> expense = {'TotalBalance': balance};
       await userRepository.updateSingleField(expense);
 
+      if (isChecked.value) {
+        userController.addExpenseMonthlyTask(transactionId, newExpense);
+      }
+
       FullScreenLoader.stopLoading();
 
       Get.back();
@@ -110,7 +120,7 @@ class ExpenseFormController extends GetxController {
         category: selectedCategory.trim(),
         date: time.text.trim(),
         description: description.text.trim(),
-        expenseType: 'income',
+        expenseType: 'Przychód',
         title: title.text.trim(),
         paymentType: selectedPaymentType.trim(),
       );
@@ -118,12 +128,18 @@ class ExpenseFormController extends GetxController {
       await userRepository.saveExpenseRecord(newIncome);
       final balance = userController.totalBalance.value + parsedAmount;
 
-      userController.user.update((user) {
-        user!.totalBalance += parsedAmount;
-      });
+      userController.user.update(
+        (user) {
+          user!.totalBalance += parsedAmount;
+        },
+      );
 
       Map<String, dynamic> income = {'TotalBalance': balance};
       await userRepository.updateSingleField(income);
+
+      if (isChecked.value) {
+        userController.addIncomeMonthlyTask(transactionId, newIncome);
+      }
 
       FullScreenLoader.stopLoading();
 

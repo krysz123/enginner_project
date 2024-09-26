@@ -97,9 +97,9 @@ class MainScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Moje transakcje', // Title above the list
+                      'Moje transakcje',
                       style: TextAppTheme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white, // Customize title color if needed
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -110,12 +110,10 @@ class MainScreen extends StatelessWidget {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                                child:
-                                    CircularProgressIndicator()); // Loading indicator
+                                child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
                             return Center(
-                                child: Text(
-                                    'Błąd: ${snapshot.error}')); // Display error
+                                child: Text('Błąd: ${snapshot.error}'));
                           } else if (!snapshot.hasData ||
                               snapshot.data!.isEmpty) {
                             return const Center(
@@ -131,7 +129,7 @@ class MainScreen extends StatelessWidget {
                                   Text('Nie masz jeszcze żadnych transakcji'),
                                 ],
                               ),
-                            ); // No data
+                            );
                           }
 
                           final transactions = snapshot.data!;

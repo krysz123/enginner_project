@@ -13,7 +13,6 @@ class NavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SideBarController());
-    // final balanceControler = Get.put(BalanceController());
     final userController = Get.put(UserController());
 
     return Scaffold(
@@ -41,12 +40,12 @@ class NavigationScreen extends StatelessWidget {
                 label: Text('Karty lojalnościowe',
                     style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.analytics_outlined, size: 35),
-                label: Text('Statystyki',
-                    style: TextAppTheme.textTheme.bodyLarge)),
-            NavigationDrawerDestination(
                 icon: const Icon(Icons.monetization_on_outlined, size: 35),
                 label: Text('Cele oszczędnościowe',
+                    style: TextAppTheme.textTheme.bodyLarge)),
+            NavigationDrawerDestination(
+                icon: const Icon(Icons.analytics_outlined, size: 35),
+                label: Text('Statystyki',
                     style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
                 icon: const Icon(Icons.person_add_alt, size: 35),
@@ -56,10 +55,6 @@ class NavigationScreen extends StatelessWidget {
                 icon: const Icon(Icons.credit_card_sharp, size: 35),
                 label: Text('Rozliczenia',
                     style: TextAppTheme.textTheme.bodyLarge)),
-            NavigationDrawerDestination(
-              icon: const Icon(Icons.blinds_closed_outlined, size: 35),
-              label: Text('Przypisy', style: TextAppTheme.textTheme.bodyLarge),
-            ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Divider(height: 1),
