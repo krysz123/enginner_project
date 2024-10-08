@@ -1,5 +1,6 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
+import 'package:enginner_project/enums/expense_type.dart';
 import 'package:enginner_project/features/app/screens/main_screen/widgets/expense_details.dart';
 import 'package:enginner_project/features/app/screens/main_screen/widgets/expense_form.dart';
 import 'package:enginner_project/features/app/screens/main_screen/widgets/income_form.dart';
@@ -58,7 +59,7 @@ class MainScreen extends StatelessWidget {
                           width: 12,
                           redirection: (() => CustomDialog.customDialog(
                               icon: Icons.add,
-                              widget: ExpenseForm(),
+                              widget: const ExpenseForm(),
                               subtitle: 'Podaj informacje o wydatku',
                               title: 'Dodaj wydatek')),
                           colorGradient1: AppColors.redColorGradient,
@@ -73,7 +74,7 @@ class MainScreen extends StatelessWidget {
                           width: 12,
                           redirection: (() => CustomDialog.customDialog(
                               icon: Icons.add,
-                              widget: IncomeForm(),
+                              widget: const IncomeForm(),
                               subtitle: 'Podaj informacje o przychodzie',
                               title: 'Dodaj przychód')),
                           colorGradient1: AppColors.greenColorGradient,
@@ -178,8 +179,32 @@ class MainScreen extends StatelessWidget {
                                     ),
                                   ),
                                   child: Card(
-                                    color: AppColors
-                                        .primary, // Set card background color
+                                    shape: transaction.expenseType ==
+                                            ExpenseTypeEnum
+                                                .periodicExpense.label
+                                        ? RoundedRectangleBorder(
+                                            side: const BorderSide(
+                                              color:
+                                                  AppColors.deleteExpenseColor,
+                                              width: 1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          )
+                                        : transaction.expenseType ==
+                                                ExpenseTypeEnum
+                                                    .periodicIncome.label
+                                            ? RoundedRectangleBorder(
+                                                side: const BorderSide(
+                                                  color: AppColors
+                                                      .greenColorGradient,
+                                                  width: 1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              )
+                                            : null,
+                                    color: AppColors.primary,
                                     child: ListTile(
                                       title: Text(transaction.title),
                                       subtitle: Text(transaction.date),
@@ -198,7 +223,11 @@ class MainScreen extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: transaction.expenseType ==
-                                                  'Wydatek'
+                                                      ExpenseTypeEnum
+                                                          .expense.label ||
+                                                  transaction.expenseType ==
+                                                      ExpenseTypeEnum
+                                                          .periodicExpense.label
                                               ? Text(
                                                   ' - ${transaction.amount} zł',
                                                   style: TextAppTheme

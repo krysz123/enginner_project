@@ -39,7 +39,6 @@ class AuthenticationRepository extends GetxController {
     if (user.emailVerified) {
       Get.offAll(
         () => const NavigationScreen(),
-        // transition: Tra
       );
     } else {
       Get.offAll(() => EmailVerificationScreen(email: user.email));

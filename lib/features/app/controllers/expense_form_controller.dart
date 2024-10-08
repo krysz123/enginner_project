@@ -1,4 +1,5 @@
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
+import 'package:enginner_project/enums/expense_type.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/utils/popups/full_screen_loader.dart';
@@ -6,6 +7,7 @@ import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:workmanager/workmanager.dart';
 
 class ExpenseFormController extends GetxController {
   static ExpenseFormController get instance => Get.find();
@@ -48,7 +50,7 @@ class ExpenseFormController extends GetxController {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
 
     if (pickedDate != null) {
@@ -59,6 +61,8 @@ class ExpenseFormController extends GetxController {
   void saveExpense() async {
     var uuid = const Uuid();
     String transactionId = uuid.v4();
+    String type = ExpenseTypeEnum.expense.label;
+
     try {
       if (!expenseFormKey.currentState!.validate()) {
         return;
@@ -68,6 +72,10 @@ class ExpenseFormController extends GetxController {
 
       final parsedAmount = double.parse(amount.text.trim());
 
+      if (isChecked.value) {
+        type = ExpenseTypeEnum.periodicExpense.label;
+      }
+
       final newExpense = ExpenseModel(
         id: transactionId,
         title: title.text.trim(),
@@ -75,11 +83,10 @@ class ExpenseFormController extends GetxController {
         category: selectedCategory.trim(),
         date: time.text.trim(),
         description: description.text.trim(),
-        expenseType: 'Wydatek',
+        expenseType: type,
         paymentType: selectedPaymentType.trim(),
       );
       await userRepository.saveExpenseRecord(newExpense);
-      // final balanceController = BalanceController.instance;
       final balance = userController.totalBalance.value - parsedAmount;
 
       userController.user.update((user) {
@@ -90,7 +97,19 @@ class ExpenseFormController extends GetxController {
       await userRepository.updateSingleField(expense);
 
       if (isChecked.value) {
-        userController.addExpenseMonthlyTask(transactionId, newExpense);
+        Workmanager().registerPeriodicTask(
+          transactionId,
+          transactionId,
+          frequency: const Duration(minutes: 15),
+          inputData: {
+            'Title': title.text,
+            'Amount': parsedAmount,
+            'Description': description.text,
+            'Category': category.value.text,
+            'Type': ExpenseTypeEnum.periodicExpense.label,
+            'PaymentType': selectedPaymentType.value,
+          },
+        );
       }
 
       FullScreenLoader.stopLoading();
@@ -105,6 +124,7 @@ class ExpenseFormController extends GetxController {
   void saveIncome() async {
     var uuid = const Uuid();
     String transactionId = uuid.v4();
+    String type = ExpenseTypeEnum.income.label;
     try {
       if (!incomeFormKey.currentState!.validate()) {
         return;
@@ -114,13 +134,17 @@ class ExpenseFormController extends GetxController {
 
       final parsedAmount = double.parse(amount.text.trim());
 
+      if (isChecked.value) {
+        type = ExpenseTypeEnum.periodicIncome.label;
+      }
+
       final newIncome = ExpenseModel(
         id: transactionId,
         amount: parsedAmount,
         category: selectedCategory.trim(),
         date: time.text.trim(),
         description: description.text.trim(),
-        expenseType: 'Przychód',
+        expenseType: type,
         title: title.text.trim(),
         paymentType: selectedPaymentType.trim(),
       );
@@ -138,7 +162,19 @@ class ExpenseFormController extends GetxController {
       await userRepository.updateSingleField(income);
 
       if (isChecked.value) {
-        userController.addIncomeMonthlyTask(transactionId, newIncome);
+        Workmanager().registerPeriodicTask(
+          transactionId,
+          transactionId,
+          frequency: const Duration(minutes: 15),
+          inputData: {
+            'Title': title.text,
+            'Amount': parsedAmount,
+            'Description': description.text,
+            'Category': category.value.text,
+            'Type': ExpenseTypeEnum.periodicIncome.label,
+            'PaymentType': selectedPaymentType.value,
+          },
+        );
       }
 
       FullScreenLoader.stopLoading();

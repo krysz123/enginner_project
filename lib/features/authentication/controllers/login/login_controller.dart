@@ -38,7 +38,7 @@ class LoginController extends GetxController {
       // shprf.setString('PASSWORD', password.text.trim());
 
       //LOGIN
-      final userCredentials = await AuthenticationRepository.instance
+      await AuthenticationRepository.instance
           .login(email.text.trim(), password.text.trim());
 
       FullScreenLoader.stopLoading();
