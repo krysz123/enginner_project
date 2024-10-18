@@ -1,5 +1,5 @@
 import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:enginner_project/features/app/screens/loyalty_cards/save_card_name.dart';
+import 'package:enginner_project/features/app/screens/loyalty_cards/widgets/save_card_name.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

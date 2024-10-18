@@ -1,6 +1,6 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
-import 'package:enginner_project/features/app/controllers/lotalty_cards_controller.dart';
+import 'package:enginner_project/features/app/screens/loyalty_cards/controllers/lotalty_cards_controller.dart';
 import 'package:enginner_project/models/loyalty_card_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';

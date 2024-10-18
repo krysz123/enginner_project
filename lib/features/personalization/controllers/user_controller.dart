@@ -4,7 +4,6 @@ import 'package:enginner_project/enums/expense_type.dart';
 import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/models/user_model.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 
 class UserController extends GetxController {
   static UserController get instance => Get.find();

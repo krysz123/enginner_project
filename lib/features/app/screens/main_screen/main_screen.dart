@@ -10,7 +10,7 @@ import 'package:enginner_project/utils/popups/custom_dialog.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -20,122 +20,122 @@ class MainScreen extends StatelessWidget {
     // final controller = Get.put(MainScreenController());
     // final controller = Get.put(BalanceController());
 
-    return Container(
-      color: AppColors.primary,
-      child: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  StreamBuilder(
-                    stream: UserRepository.instance.streamTotalBalance(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Błąd: ${snapshot.error}');
-                      } else if (!snapshot.hasData) {
-                        return const Text('Brak danych');
-                      }
+    return SafeArea(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                StreamBuilder(
+                  stream: UserRepository.instance.streamTotalBalance(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Błąd: ${snapshot.error}');
+                    } else if (!snapshot.hasData) {
+                      return const Text('Brak danych');
+                    }
 
-                      final totalBalance = snapshot.data ?? 0.0;
-                      return Text('$totalBalance zł',
-                          style: TextAppTheme.textTheme.headlineSmall);
-                    },
-                  ),
-                  Text(
-                    'Stan konta',
-                    style: TextAppTheme.textTheme.labelSmall,
-                  ),
-                  const SizedBox(height: 70),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomButton(
-                          text: 'Wydatek',
-                          height: 50,
-                          width: 12,
-                          redirection: (() => CustomDialog.customDialog(
-                              icon: Icons.add,
-                              widget: const ExpenseForm(),
-                              subtitle: 'Podaj informacje o wydatku',
-                              title: 'Dodaj wydatek')),
-                          colorGradient1: AppColors.redColorGradient,
-                          colorGradient2: AppColors.blueButton,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: CustomButton(
-                          text: 'Przychód',
-                          height: 50,
-                          width: 12,
-                          redirection: (() => CustomDialog.customDialog(
-                              icon: Icons.add,
-                              widget: const IncomeForm(),
-                              subtitle: 'Podaj informacje o przychodzie',
-                              title: 'Dodaj przychód')),
-                          colorGradient1: AppColors.greenColorGradient,
-                          colorGradient2: AppColors.blueButton,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color:
-                      AppColors.secondary, // Set your custom background color
+                    final totalBalance = snapshot.data ?? 0.0;
+                    return Text('$totalBalance zł',
+                        style: TextAppTheme.textTheme.headlineSmall);
+                  },
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Text(
+                  'Stan konta',
+                  style: TextAppTheme.textTheme.labelSmall,
+                ),
+                const SizedBox(height: 70),
+                Row(
                   children: [
-                    Text(
-                      'Moje transakcje',
-                      style: TextAppTheme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
+                    Expanded(
+                      child: CustomButton(
+                        text: 'Wydatek',
+                        height: 50,
+                        width: 12,
+                        redirection: (() => CustomDialog.customDialog(
+                            icon: Icons.add,
+                            widget: const ExpenseForm(),
+                            subtitle: 'Podaj informacje o wydatku',
+                            title: 'Dodaj wydatek')),
+                        colorGradient1: AppColors.redColorGradient,
+                        colorGradient2: AppColors.blueButton,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(width: 20),
                     Expanded(
-                      child: StreamBuilder<List<ExpenseModel>>(
-                        stream: UserRepository.instance.streamAllTransactions(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Center(
-                                child: Text('Błąd: ${snapshot.error}'));
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.question_mark_rounded,
-                                    color: AppColors.textSecondaryColor,
-                                    size: 50,
-                                  ),
-                                  SizedBox(height: 20),
-                                  Text('Nie masz jeszcze żadnych transakcji'),
-                                ],
-                              ),
-                            );
-                          }
+                      child: CustomButton(
+                        text: 'Przychód',
+                        height: 50,
+                        width: 12,
+                        redirection: (() => CustomDialog.customDialog(
+                            icon: Icons.add,
+                            widget: const IncomeForm(),
+                            subtitle: 'Podaj informacje o przychodzie',
+                            title: 'Dodaj przychód')),
+                        colorGradient1: AppColors.greenColorGradient,
+                        colorGradient2: AppColors.blueButton,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                color: AppColors.secondary, // Set your custom background color
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Moje transakcje',
+                    style: TextAppTheme.textTheme.titleMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: StreamBuilder<List<ExpenseModel>>(
+                      stream: UserRepository.instance.streamAllTransactions(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(child: Text('Błąd: ${snapshot.error}'));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.question_mark_rounded,
+                                  color: AppColors.textSecondaryColor,
+                                  size: 50,
+                                ),
+                                SizedBox(height: 20),
+                                Text('Nie masz jeszcze żadnych transakcji'),
+                              ],
+                            ),
+                          );
+                        }
 
-                          final transactions = snapshot.data!;
+                        final transactions = snapshot.data!;
 
-                          return ListView.builder(
+                        return Skeletonizer(
+                          enabled: snapshot.connectionState ==
+                              ConnectionState.waiting,
+                          effect: const ShimmerEffect(
+                            baseColor: AppColors.onBoarding3,
+                            highlightColor: Colors.grey,
+                            duration: Duration(seconds: 2),
+                          ),
+                          child: ListView.builder(
                             itemCount:
                                 transactions.length, // Example item count
                             itemBuilder: (context, index) {
@@ -248,16 +248,16 @@ class MainScreen extends StatelessWidget {
                                 ),
                               );
                             },
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

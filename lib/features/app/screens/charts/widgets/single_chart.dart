@@ -1,4 +1,4 @@
-import 'package:enginner_project/features/app/controllers/charts_controller.dart';
+import 'package:enginner_project/features/app/screens/charts/controllers/charts_controller.dart';
 import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
@@ -20,47 +20,50 @@ class SingleChartScrenn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = ChartsController.instance;
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextAppTheme.textTheme.headlineSmall,
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: StreamBuilder<List<ExpenseModel>>(
-            stream: stream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Błąd: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.question_mark_rounded,
-                        color: AppColors.textSecondaryColor,
-                        size: 50,
-                      ),
-                      SizedBox(height: 20),
-                      Text('Brak danych'),
-                    ],
-                  ),
-                );
-              }
-
-              return Obx(() {
-                final allTransactions =
-                    controller.filterTransactions(snapshot.data!);
-                return buildChart(allTransactions);
-              });
-            },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextAppTheme.textTheme.headlineSmall,
           ),
-        ),
-      ],
+          const SizedBox(height: 20),
+          Expanded(
+            child: StreamBuilder<List<ExpenseModel>>(
+              stream: stream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Błąd: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.question_mark_rounded,
+                          color: AppColors.textSecondaryColor,
+                          size: 50,
+                        ),
+                        SizedBox(height: 20),
+                        Text('Brak danych'),
+                      ],
+                    ),
+                  );
+                }
+
+                return Obx(() {
+                  final allTransactions =
+                      controller.filterTransactions(snapshot.data!);
+                  return buildChart(allTransactions);
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

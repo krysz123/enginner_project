@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
+import 'package:enginner_project/enums/debts_types_enum.dart';
 import 'package:enginner_project/enums/expense_type.dart';
+import 'package:enginner_project/enums/friend_status_enum.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
+import 'package:enginner_project/models/debt_model.dart';
 import 'package:enginner_project/models/expense_model.dart';
+import 'package:enginner_project/models/friend_model.dart';
 import 'package:enginner_project/models/loyalty_card_model.dart';
 import 'package:enginner_project/models/saving_goal_model.dart';
 import 'package:enginner_project/models/user_model.dart';
@@ -140,6 +144,7 @@ class UserRepository extends GetxController {
   }
 
   Stream<List<ExpenseModel>> streamAllTransactions() {
+    print('---------------- uruchamia sie stream --------------  ');
     return _db
         .collection("Users")
         .doc(AuthenticationRepository.instance.authUser?.uid)
@@ -407,5 +412,224 @@ class UserRepository extends GetxController {
         .map((querySnapshot) => querySnapshot.docs
             .map((doc) => ExpenseModel.fromSnapshot(doc))
             .toList());
+  }
+
+  Future<bool> checkIfEmailExist(String email) async {
+    try {
+      final querySnapshot = await _db
+          .collection("Users")
+          .where("Email", isEqualTo: email)
+          .limit(1)
+          .get();
+      return querySnapshot.docs.isNotEmpty;
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<bool> checkIfinviteWasSended(
+      String senderId, String recipientId) async {
+    try {
+      final senderQuery = await _db
+          .collection("Users")
+          .doc(senderId)
+          .collection("Friends")
+          .doc(recipientId)
+          .get();
+      final recipientQuery = await _db
+          .collection("Users")
+          .doc(recipientId)
+          .collection("Friends")
+          .doc(senderId)
+          .get();
+
+      if (!senderQuery.exists && !recipientQuery.exists) {
+        return true;
+      } else {
+        return false;
+      }
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> sendInvite(String email) async {
+    try {
+      final controller = UserController.instance;
+
+      final querySnapshot = await _db
+          .collection("Users")
+          .where("Email", isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot<Map<String, dynamic>> data = querySnapshot.docs.first;
+        final userToInvite = UserModel.fromSnapshot(data);
+
+        final invitationCheck = await checkIfinviteWasSended(
+            AuthenticationRepository.instance.authUser!.uid, userToInvite.id);
+
+        if (!invitationCheck) {
+          throw 'Zaproszenie zostało już wysłane';
+        }
+
+        // Do otrzymującego zaproszenie
+        await _db
+            .collection("Users")
+            .doc(userToInvite.id)
+            .collection("Friends")
+            .doc(AuthenticationRepository.instance.authUser?.uid)
+            .set(<String, dynamic>{
+          'Fullname': controller.user.value.fullname,
+          'Email': controller.user.value.email,
+          'Status': FriendStatusEnum.invitation.label
+        });
+
+        // Do wysyłającego zaproszenie
+        await _db
+            .collection("Users")
+            .doc(AuthenticationRepository.instance.authUser?.uid)
+            .collection("Friends")
+            .doc(userToInvite.id)
+            .set(<String, dynamic>{
+          'Fullname': userToInvite.fullname,
+          'Email': userToInvite.email,
+          'Status': FriendStatusEnum.sendInvite.label,
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw '$e';
+    }
+  }
+
+  Future<void> acceptInvite(String friendId) async {
+    try {
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Friends")
+          .doc(friendId)
+          .update(<String, dynamic>{"Status": FriendStatusEnum.accepted.label});
+
+      await _db
+          .collection("Users")
+          .doc(friendId)
+          .collection("Friends")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .update(<String, dynamic>{"Status": FriendStatusEnum.accepted.label});
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      print('Error $e');
+      throw '$e';
+    }
+  }
+
+  Stream<List<FriendModel>> streamInvitations() {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("Friends")
+        .where("Status", whereIn: [
+          FriendStatusEnum.invitation.label,
+          FriendStatusEnum.sendInvite.label,
+          FriendStatusEnum.rejected.label,
+        ])
+        .orderBy('Status', descending: false)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => FriendModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Stream<List<FriendModel>> streamFriendsList() {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("Friends")
+        .where("Status", isEqualTo: FriendStatusEnum.accepted.label)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => FriendModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Future<void> saveNewDebt(String friendId, DebtModel model) async {
+    try {
+      // Otrzymujący dług
+      await _db
+          .collection("Users")
+          .doc(friendId)
+          .collection("Friends")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Debts")
+          .doc()
+          .set(<String, dynamic>{
+        'Title': model.title,
+        'Description': model.description,
+        'Amount': model.amount,
+        'Type': DebtsTypesEnum.debts.label,
+        'Status': false,
+        'Timestamp': model.timestamp,
+      });
+
+      // Do tworzącego dług
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Friends")
+          .doc(friendId)
+          .collection("Debts")
+          .doc()
+          .set(<String, dynamic>{
+        'Title': model.title,
+        'Description': model.description,
+        'Amount': model.amount,
+        'Type': DebtsTypesEnum.claims.label,
+        'Status': false,
+        'Timestamp': model.timestamp,
+      });
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw '$e';
+    }
   }
 }

@@ -2,7 +2,7 @@ import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/enums/income_category_enum.dart';
 import 'package:enginner_project/enums/payment_type_enum.dart';
-import 'package:enginner_project/features/app/controllers/expense_form_controller.dart';
+import 'package:enginner_project/features/app/screens/main_screen/controllers/expense_form_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';

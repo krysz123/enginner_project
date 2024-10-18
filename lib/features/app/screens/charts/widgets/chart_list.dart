@@ -127,7 +127,14 @@ class ListCharts {
             minY: 0,
           ),
         ),
-      )
+      ),
+      const Text('Siema'),
+      const Text('Siema'),
+      const Text('Siema'),
+      const Text('Siema'),
+      const Text('Siema'),
+      const Text('Siema'),
+      const Text('Siema'),
     ];
   }
 }
