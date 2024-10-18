@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class Validator {
   static String? validateEmptyText(String? fieldName, String? value) {
     if (value == null || value.isEmpty) {
@@ -13,7 +11,6 @@ class Validator {
       return 'Adres e-mail jest wymagany.';
     }
 
-    // Wyrażenie regularne do walidacji adresu e-mail
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
     if (!emailRegExp.hasMatch(value)) {
@@ -28,22 +25,18 @@ class Validator {
       return 'Hasło jest wymagane.';
     }
 
-    // Sprawdzenie minimalnej długości hasła
     if (value.length < 6) {
       return 'Hasło musi mieć co najmniej 6 znaków.';
     }
 
-    // Sprawdzenie obecności wielkich liter
     if (!value.contains(RegExp(r'[A-Z]'))) {
       return 'Hasło musi zawierać co najmniej jedną wielką literę.';
     }
 
-    // Sprawdzenie obecności cyfr
     if (!value.contains(RegExp(r'[0-9]'))) {
       return 'Hasło musi zawierać co najmniej jedną cyfrę.';
     }
 
-    // Sprawdzenie obecności znaków specjalnych
     if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
       return 'Hasło musi zawierać co najmniej jeden znak specjalny.';
     }
@@ -56,7 +49,6 @@ class Validator {
       return 'Numer telefonu jest wymagany.';
     }
 
-    // Wyrażenie regularne do walidacji numeru telefonu (zakładając 10-cyfrowy format numeru telefonu w USA)
     final phoneRegExp = RegExp(r'^\d{9}$');
 
     if (!phoneRegExp.hasMatch(value)) {

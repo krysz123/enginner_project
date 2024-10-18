@@ -1,23 +1,19 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
-import 'package:enginner_project/features/app/controllers/expense_form_controller.dart';
+import 'package:enginner_project/enums/income_category_enum.dart';
+import 'package:enginner_project/enums/payment_type_enum.dart';
+import 'package:enginner_project/features/app/screens/main_screen/controllers/expense_form_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:workmanager/workmanager.dart';
 
 class IncomeForm extends StatelessWidget {
-  IncomeForm({
+  const IncomeForm({
     super.key,
   });
-  final categories = [
-    const DropdownMenuItem(
-        value: 'Wynagrodzenie', child: Text('Wynagrodzenie')),
-    const DropdownMenuItem(value: 'Renta', child: Text('Renta')),
-    const DropdownMenuItem(value: 'Podatki', child: Text('Podatki')),
-    // const DropdownMenuItem(value: 'podatki', child: Text('Podatki')),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +76,21 @@ class IncomeForm extends StatelessWidget {
                 : controller.selectedCategory.value,
             dropdownColor: AppColors.primary,
             hint: const Text('Kategoria'),
-            items: categories,
+            items: IncomeCategory.values
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e.label,
+                    child: Text(
+                      e.label,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ),
+                )
+                .toList(),
             onChanged: (value) => controller.changeCategory(value),
             validator: (value) => Validator.validateDropdownSelection(value),
+            isExpanded: false,
           ),
           const SizedBox(height: 20),
           DropdownButtonFormField(
@@ -92,10 +100,12 @@ class IncomeForm extends StatelessWidget {
             hint: const Text('Rodzaj płatności'),
             dropdownColor: AppColors.primary,
             validator: (value) => Validator.validateDropdownSelection(value),
-            items: const [
-              DropdownMenuItem(value: 'karta', child: Text('Karta kredytowa')),
-              DropdownMenuItem(value: 'gotowka', child: Text('Gotówka')),
-            ],
+            items: PaymentTypeEnum.values
+                .map((e) => DropdownMenuItem(
+                      value: e.label,
+                      child: Text(e.label),
+                    ))
+                .toList(),
             onChanged: (value) => controller.changePaymentType(value),
           ),
           Row(
@@ -107,6 +117,16 @@ class IncomeForm extends StatelessWidget {
                   height: 40,
                   width: 12,
                   redirection: (() => Get.back()),
+                  colorGradient1: AppColors.redColorGradient,
+                  colorGradient2: AppColors.blueButton,
+                ),
+              ),
+              Expanded(
+                child: CustomButton(
+                  text: 'usun wszystok',
+                  height: 40,
+                  width: 12,
+                  redirection: (() => Workmanager().cancelAll()),
                   colorGradient1: AppColors.redColorGradient,
                   colorGradient2: AppColors.blueButton,
                 ),

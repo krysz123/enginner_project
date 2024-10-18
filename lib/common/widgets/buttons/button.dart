@@ -21,7 +21,8 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      splashColor: Colors.transparent,
       onTap: redirection,
       child: Container(
         decoration: BoxDecoration(
@@ -38,6 +39,7 @@ class CustomButton extends StatelessWidget {
           child: Text(
             text,
             style: TextAppTheme.textTheme.titleSmall,
+            maxLines: 1,
           ),
         ),
       ),

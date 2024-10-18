@@ -1,6 +1,6 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
-import 'package:enginner_project/features/app/controllers/add_saving_amount_form_controller.dart';
+import 'package:enginner_project/features/app/screens/saving_goals/controllers/add_saving_amount_form_controller.dart';
 import 'package:enginner_project/models/saving_goal_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';

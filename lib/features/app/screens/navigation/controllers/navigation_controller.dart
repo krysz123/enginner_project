@@ -1,6 +1,9 @@
+import 'package:enginner_project/features/app/screens/charts/charts_screen.dart';
+import 'package:enginner_project/features/app/screens/friends/friends_screen.dart';
 import 'package:enginner_project/features/app/screens/loyalty_cards/loyalty_cards_screen.dart';
 import 'package:enginner_project/features/app/screens/main_screen/main_screen.dart';
 import 'package:enginner_project/features/app/screens/saving_goals/saving_goal_screen.dart';
+import 'package:enginner_project/features/app/screens/shared_account/shared_account.dart';
 import 'package:get/get.dart';
 
 class SideBarController extends GetxController {
@@ -19,6 +22,12 @@ class SideBarController extends GetxController {
         return const LoyaltyCardsScreen();
       case 2:
         return const SavingGoalsScreen();
+      case 3:
+        return const ChartsScreen();
+      case 4:
+        return const FriendsScreen();
+      case 5:
+        return const SharedAccountScreen();
       default:
         return const MainScreen();
     }

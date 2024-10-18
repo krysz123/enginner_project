@@ -6,9 +6,7 @@ import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class SavingGoalsScreen extends StatelessWidget {

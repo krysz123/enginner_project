@@ -1,5 +1,5 @@
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
-import 'package:enginner_project/features/app/controllers/navigation_controller.dart';
+import 'package:enginner_project/features/app/screens/navigation/controllers/navigation_controller.dart';
 import 'package:enginner_project/features/app/screens/navigation/widgets/custom_drawer_header.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
@@ -48,12 +48,12 @@ class NavigationScreen extends StatelessWidget {
                 label: Text('Statystyki',
                     style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.person_add_alt, size: 35),
-                label: Text('Profil łączony',
-                    style: TextAppTheme.textTheme.bodyLarge)),
+                icon: const Icon(Icons.person, size: 35),
+                label:
+                    Text('Znajomi', style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.credit_card_sharp, size: 35),
-                label: Text('Rozliczenia',
+                icon: const Icon(Icons.people, size: 35),
+                label: Text('Wspólne rachunki',
                     style: TextAppTheme.textTheme.bodyLarge)),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
