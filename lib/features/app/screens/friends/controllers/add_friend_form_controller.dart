@@ -1,7 +1,6 @@
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/utils/device/network_connection.dart';
-import 'package:enginner_project/utils/popups/full_screen_loader.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

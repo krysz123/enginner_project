@@ -6,12 +6,12 @@ class FriendsController extends GetxController {
   static FriendsController get instance => Get.find();
 
   final values = RxList<bool>([true, false, false]);
-  final status = Rx<String>(FriendStatusEnum.sendInvite.label);
-  final List<String> values2 = [
+  final status = FriendStatusEnum.sendInvite.label.obs;
+  final values2 = [
     FriendStatusEnum.sendInvite.label,
     FriendStatusEnum.invitation.label,
     FriendStatusEnum.rejected.label
-  ];
+  ].obs;
 
   Rx<int> currentPage = 0.obs;
   final pageViewController = PageController();

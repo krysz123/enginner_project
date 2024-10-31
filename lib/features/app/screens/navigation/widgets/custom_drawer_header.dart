@@ -2,6 +2,7 @@ import 'package:enginner_project/features/personalization/controllers/user_contr
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class CustomDrawerHeader extends StatelessWidget {
@@ -19,12 +20,11 @@ class CustomDrawerHeader extends StatelessWidget {
       child: Column(
         children: [
           const CircleAvatar(
-            radius: 40,
-            child: Icon(
-              Icons.person,
-              size: 40,
-            ),
-          ),
+              radius: 40,
+              child: FaIcon(
+                FontAwesomeIcons.userLarge,
+                size: 30,
+              )),
           const SizedBox(
             height: 10,
           ),

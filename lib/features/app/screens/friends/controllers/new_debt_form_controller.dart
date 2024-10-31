@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
-import 'package:enginner_project/enums/debts_types_enum.dart';
 import 'package:enginner_project/models/debt_model.dart';
-import 'package:enginner_project/models/friend_model.dart';
 import 'package:enginner_project/utils/device/network_connection.dart';
 import 'package:enginner_project/utils/popups/full_screen_loader.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
@@ -21,6 +19,8 @@ class NewDebtFormController extends GetxController {
   final userRepository = UserRepository.instance;
 
   saveNewDebt(String friendId) async {
+    var uuid = const Uuid();
+    String savingNewDebtId = uuid.v4();
     try {
       if (!newDebtFormKey.currentState!.validate()) {
         return;
@@ -34,6 +34,7 @@ class NewDebtFormController extends GetxController {
       final parseAmount = double.parse(amount.text.trim());
 
       final savingNewDebt = DebtModel(
+          id: savingNewDebtId,
           description: description.text,
           title: title.text,
           amount: parseAmount,

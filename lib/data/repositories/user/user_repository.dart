@@ -1,14 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:enginner_project/enums/debts_types_enum.dart';
+import 'package:enginner_project/enums/expense_category_enum.dart';
 import 'package:enginner_project/enums/expense_type.dart';
 import 'package:enginner_project/enums/friend_status_enum.dart';
+import 'package:enginner_project/enums/payment_type_enum.dart';
+import 'package:enginner_project/features/app/screens/shared_accounts/widgets/shared_account_form.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/models/debt_model.dart';
 import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/models/friend_model.dart';
 import 'package:enginner_project/models/loyalty_card_model.dart';
 import 'package:enginner_project/models/saving_goal_model.dart';
+import 'package:enginner_project/models/shared_account_expense_model.dart';
+import 'package:enginner_project/models/shared_account_model.dart';
 import 'package:enginner_project/models/user_model.dart';
 import 'package:enginner_project/utils/exceptions/firebase_auth_exceptions.dart';
 import 'package:enginner_project/utils/exceptions/firebase_exceptions.dart';
@@ -144,7 +149,6 @@ class UserRepository extends GetxController {
   }
 
   Stream<List<ExpenseModel>> streamAllTransactions() {
-    print('---------------- uruchamia sie stream --------------  ');
     return _db
         .collection("Users")
         .doc(AuthenticationRepository.instance.authUser?.uid)
@@ -165,6 +169,22 @@ class UserRepository extends GetxController {
           .collection("Transactions")
           .doc(transactionId)
           .delete();
+
+      QuerySnapshot allSavingGoals = await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("SavingGoals")
+          .get();
+
+      for (var doc in allSavingGoals.docs) {
+        DocumentSnapshot paymentSnapshot =
+            await doc.reference.collection("Payments").doc(transactionId).get();
+
+        if (paymentSnapshot.exists) {
+          await paymentSnapshot.reference.delete();
+          await deleteAmount(doc.id, amount);
+        }
+      }
 
       final userController = UserController.instance;
       double balance = 0;
@@ -267,6 +287,78 @@ class UserRepository extends GetxController {
     }
   }
 
+  Future<void> addSavingGoalPayment(SavingGoalModel model, double amount,
+      String date, String paymentId) async {
+    try {
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("SavingGoals")
+          .doc(model.id)
+          .collection("Payments")
+          .doc(paymentId)
+          .set({
+        "Amount": amount,
+        "Date": date,
+      });
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> addSavingGoalPaymentToTransactions(
+      SavingGoalModel model,
+      double amount,
+      String date,
+      String paymentId,
+      ExpenseModel expenseModel) async {
+    try {
+      _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Transactions")
+          .doc(paymentId)
+          .set(expenseModel.toJson());
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Stream<List<Map<String, dynamic>>> streamGoalPayments(String goalId) {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("SavingGoals")
+        .doc(goalId)
+        .collection("Payments")
+        .orderBy("Date", descending: false)
+        .snapshots()
+        .map((QuerySnapshot snapshot) {
+      return snapshot.docs.map((doc) {
+        return {
+          "Amount": doc["Amount"] as double,
+          "Date": doc["Date"] as String,
+        };
+      }).toList();
+    });
+  }
+
   Stream<List<SavingGoalModel>> streamAllSavingGoals() {
     return _db
         .collection("Users")
@@ -278,23 +370,6 @@ class UserRepository extends GetxController {
             .toList());
   }
 
-  // Stream<double> streamSavingGoalProgress() {
-  //   return _db
-  //       .collection("Users")
-  //       .doc(AuthenticationRepository.instance.authUser?.uid)
-  //       .collection("SavingGoals")
-  //       .doc()
-  //       .snapshots()
-  //       .map((snapshot) {
-  //     final data = snapshot.data();
-  //     if (data != null && data.containsKey('CurrentAmount')) {
-  //       return data['CurrentAmount'];
-  //     } else {
-  //       return 0.0;
-  //     }
-  //   });
-  // }
-
   Future<void> addAmount(String documentId, double amount) async {
     try {
       await _db
@@ -305,6 +380,31 @@ class UserRepository extends GetxController {
           .update(
         {
           'CurrentAmount': FieldValue.increment(amount),
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> deleteAmount(String documentId, double amount) async {
+    try {
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("SavingGoals")
+          .doc(documentId)
+          .update(
+        {
+          'CurrentAmount': FieldValue.increment(-amount),
         },
       );
     } on FirebaseAuthException catch (e) {
@@ -556,6 +656,28 @@ class UserRepository extends GetxController {
     }
   }
 
+  Future<void> rejectInvite(String friendId) async {
+    try {
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Friends")
+          .doc(friendId)
+          .update(<String, dynamic>{"Status": FriendStatusEnum.rejected.label});
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      print('Error $e');
+      throw '$e';
+    }
+  }
+
   Stream<List<FriendModel>> streamInvitations() {
     return _db
         .collection("Users")
@@ -594,7 +716,7 @@ class UserRepository extends GetxController {
           .collection("Friends")
           .doc(AuthenticationRepository.instance.authUser?.uid)
           .collection("Debts")
-          .doc()
+          .doc(model.id)
           .set(<String, dynamic>{
         'Title': model.title,
         'Description': model.description,
@@ -611,7 +733,7 @@ class UserRepository extends GetxController {
           .collection("Friends")
           .doc(friendId)
           .collection("Debts")
-          .doc()
+          .doc(model.id)
           .set(<String, dynamic>{
         'Title': model.title,
         'Description': model.description,
@@ -631,5 +753,332 @@ class UserRepository extends GetxController {
     } catch (e) {
       throw '$e';
     }
+  }
+
+  Stream<List<DebtModel>> streamAllDebts(String friendId) {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("Friends")
+        .doc(friendId)
+        .collection("Debts")
+        .orderBy("Status", descending: false)
+        .orderBy("Timestamp", descending: true)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => DebtModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Future<void> setDebtAsReturned(String friendId, String debtId) async {
+    try {
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Friends")
+          .doc(friendId)
+          .collection("Debts")
+          .doc(debtId)
+          .update({
+        "Status": true,
+      });
+
+      await _db
+          .collection("Users")
+          .doc(friendId)
+          .collection("Friends")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Debts")
+          .doc(debtId)
+          .update({
+        "Status": true,
+      });
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> storeNewSharedAccount(SharedAccountModel model) async {
+    try {
+      await _db.collection("SharedAccounts").doc(model.id).set(model.toJson());
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Stream<List<SharedAccountModel>> streamSharedAccountInvitations() {
+    return _db
+        .collection("SharedAccounts")
+        .where('Members.${AuthenticationRepository.instance.authUser?.uid}',
+            isEqualTo: false)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => SharedAccountModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Future<void> acceptInviteToSharedAccount(
+      String id, String sharedAccountId) async {
+    try {
+      await _db
+          .collection("SharedAccounts")
+          .doc(sharedAccountId)
+          .update({'Members.$id': true});
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      print('Error $e');
+      throw '$e';
+    }
+  }
+
+  Future<void> rejectInviteToSharedAccount(
+      String id, String sharedAccountId) async {
+    try {
+      await _db
+          .collection("SharedAccounts")
+          .doc(sharedAccountId)
+          .update({'Members.$id': FieldValue.delete()});
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      print('Error $e');
+      throw '$e';
+    }
+  }
+
+  Stream<List<SharedAccountModel>> streamSharedAccounts() {
+    return _db
+        .collection("SharedAccounts")
+        .where('Members.${AuthenticationRepository.instance.authUser?.uid}',
+            isEqualTo: true)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => SharedAccountModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Future<void> saveSharedAccountExpense(
+      SharedAccountExpenseModel model, String sharedAccountId) async {
+    try {
+      _db
+          .collection("SharedAccounts")
+          .doc(sharedAccountId)
+          .collection("Transactions")
+          .doc(model.id)
+          .set(model.toJson());
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<List<SharedAccountExpenseModel>> fetchAllSharedAccountTransactions(
+      String sharedAccountId) async {
+    try {
+      final querySnapshot = await _db
+          .collection("SharedAccounts")
+          .doc(sharedAccountId)
+          .collection("Transactions")
+          .orderBy('Date', descending: true)
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => SharedAccountExpenseModel.fromSnapshot(doc))
+          .toList();
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Stream<double> streamSharedAccountTotalBalance(String sharedAccountId) {
+    return _db
+        .collection("SharedAccounts")
+        .doc(sharedAccountId)
+        .snapshots()
+        .map((snapshot) {
+      final data = snapshot.data();
+      if (data != null && data.containsKey('CurrentBalance')) {
+        return data['CurrentBalance'].toDouble();
+      } else {
+        return 0.0;
+      }
+    });
+  }
+
+  Stream<List<SharedAccountExpenseModel>> streamAllSharedAccountTransactions(
+      String sharedAccountId) {
+    return _db
+        .collection("SharedAccounts")
+        .doc(sharedAccountId)
+        .collection("Transactions")
+        .orderBy('Date', descending: true)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((doc) => SharedAccountExpenseModel.fromSnapshot(doc))
+            .toList());
+  }
+
+  Future<void> deleteSharedAccountExpense(String transactionId,
+      String sharedAccountId, String type, double amount) async {
+    try {
+      _db
+          .collection("SharedAccounts")
+          .doc(sharedAccountId)
+          .collection("Transactions")
+          .doc(transactionId)
+          .delete();
+
+      if (type == ExpenseTypeEnum.expense.label) {
+        incrementSharedAccountCurrentBalance(amount, sharedAccountId);
+      } else {
+        decrementSharedAccountCurrentBalance(amount, sharedAccountId);
+      }
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> incrementSharedAccountCurrentBalance(
+      double amount, String sharedAccountId) async {
+    try {
+      await _db.collection("SharedAccounts").doc(sharedAccountId).update(
+        {
+          'CurrentBalance': FieldValue.increment(amount),
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<void> decrementSharedAccountCurrentBalance(
+      double amount, String sharedAccountId) async {
+    try {
+      await _db.collection("SharedAccounts").doc(sharedAccountId).update(
+        {
+          'CurrentBalance': FieldValue.increment(-amount),
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Future<List<Map<String, String>>> fetchUsersToSharedAccount(
+      String sharedAccountId, bool isMember) async {
+    List<Map<String, String>> users = [];
+    try {
+      DocumentSnapshot sharedAccountSnapshot =
+          await _db.collection("SharedAccounts").doc(sharedAccountId).get();
+
+      if (sharedAccountSnapshot.exists) {
+        Map<String, dynamic> members = sharedAccountSnapshot.get('Members');
+
+        List<String> usersIds = members.entries
+            .where((entry) => entry.value == isMember)
+            .map((entry) => entry.key)
+            .toList();
+
+        for (String userId in usersIds) {
+          DocumentSnapshot userSnapshot =
+              await _db.collection('Users').doc(userId).get();
+
+          if (userSnapshot.exists) {
+            String firstName = userSnapshot.get('FirstName');
+            String lastName = userSnapshot.get('LastName');
+
+            users.add({
+              'sharedAccountId': sharedAccountId,
+              'id': userId,
+              'firstName': firstName,
+              'lastName': lastName,
+            });
+          } else {
+            throw 'Błąd!';
+          }
+        }
+      } else {
+        throw 'Błąd! dokument nie istnieje.';
+      }
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+    return users;
   }
 }

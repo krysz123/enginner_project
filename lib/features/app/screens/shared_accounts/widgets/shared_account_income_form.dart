@@ -1,20 +1,24 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/enums/expense_category_enum.dart';
+import 'package:enginner_project/enums/income_category_enum.dart';
 import 'package:enginner_project/enums/payment_type_enum.dart';
 import 'package:enginner_project/features/app/screens/main_screen/controllers/expense_form_controller.dart';
+import 'package:enginner_project/features/app/screens/shared_accounts/controllers/shared_account_transaction_form_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ExpenseForm extends StatelessWidget {
-  const ExpenseForm({super.key});
+class SharedAccountIncomeForm extends StatelessWidget {
+  const SharedAccountIncomeForm({super.key, required this.sharedAccountId});
+
+  final String sharedAccountId;
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ExpenseFormController());
+    final controller = Get.put(SharedAccountTransactionFormController());
 
     return Form(
       key: controller.expenseFormKey,
@@ -46,26 +50,6 @@ class ExpenseForm extends StatelessWidget {
               controller.selectDate(context);
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              children: [
-                Text(
-                  'Wydatek stały',
-                  style: TextAppTheme.textTheme.titleMedium!
-                      .copyWith(color: AppColors.textSecondaryColor),
-                ),
-                const Spacer(),
-                Obx(
-                  () => Checkbox(
-                    value: controller.isChecked.value,
-                    onChanged: (value) => controller.changeCheckbox(value),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.textSecondaryColor),
           DropdownButtonFormField(
             value: controller.selectedCategory.value.isEmpty
                 ? null
@@ -73,13 +57,13 @@ class ExpenseForm extends StatelessWidget {
             dropdownColor: AppColors.primary,
             hint: const Text('Kategoria'),
             isDense: true,
-            items: ExpenseCategory.values
+            items: IncomeCategory.values
                 .map(
                   (e) => DropdownMenuItem(
                     value: e.label,
                     child: Row(
                       children: [
-                        Icon(ExpenseCategory.returnIcon(e.label)),
+                        Icon(IncomeCategory.returnIcon(e.label)),
                         const SizedBox(width: 10),
                         Text(
                           e.label,
@@ -107,17 +91,7 @@ class ExpenseForm extends StatelessWidget {
             items: PaymentTypeEnum.values
                 .map((e) => DropdownMenuItem(
                       value: e.label,
-                      child: Row(
-                        children: [
-                          Icon(PaymentTypeEnum.returnIcon(e.label)),
-                          const SizedBox(width: 10),
-                          Text(
-                            e.label,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ],
-                      ),
+                      child: Text(e.label),
                     ))
                 .toList(),
           ),
@@ -140,7 +114,7 @@ class ExpenseForm extends StatelessWidget {
                   text: 'Zapisz',
                   height: 40,
                   width: 12,
-                  redirection: () => controller.saveExpense(),
+                  redirection: () => controller.saveIncome(sharedAccountId),
                   colorGradient1: AppColors.greenColorGradient,
                   colorGradient2: AppColors.blueButton,
                 ),

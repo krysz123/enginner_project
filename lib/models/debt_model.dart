@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DebtModel {
+  String id;
   String title;
   double amount;
   String type;
@@ -10,15 +11,17 @@ class DebtModel {
   Timestamp timestamp;
 
   DebtModel({
-    required this.description,
+    required this.id,
     required this.title,
     required this.amount,
     required this.type,
     required this.status,
+    required this.description,
     required this.timestamp,
   });
 
   static DebtModel empty() => DebtModel(
+        id: '',
         title: '',
         description: '',
         amount: 0,
@@ -29,6 +32,7 @@ class DebtModel {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'id': id,
       'Title': title,
       'Description': description,
       'Amount': amount,
@@ -43,6 +47,7 @@ class DebtModel {
     if (document.data() != null) {
       final data = document.data()!;
       return DebtModel(
+        id: document.id,
         amount: data['Amount'],
         description: data['Description'],
         type: data['Type'],

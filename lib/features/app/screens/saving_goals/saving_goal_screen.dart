@@ -1,5 +1,6 @@
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/features/app/screens/saving_goals/widgets/add_saving_amount_form.dart';
+import 'package:enginner_project/features/app/screens/saving_goals/widgets/goal_payments_list.dart';
 import 'package:enginner_project/features/app/screens/saving_goals/widgets/saving_goal_form.dart';
 import 'package:enginner_project/models/saving_goal_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
@@ -7,6 +8,7 @@ import 'package:enginner_project/utils/device/device_utility.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class SavingGoalsScreen extends StatelessWidget {
@@ -29,14 +31,6 @@ class SavingGoalsScreen extends StatelessWidget {
         return value;
       } else {
         return 1.0;
-      }
-    }
-
-    bool isEnded(SavingGoalModel savingGoal) {
-      if (savingGoal.goal < savingGoal.currentAmount) {
-        return false;
-      } else {
-        return true;
       }
     }
 
@@ -107,6 +101,8 @@ class SavingGoalsScreen extends StatelessWidget {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: GestureDetector(
+                              onTap: (() => Get.to(() =>
+                                  GoalPaymentsList(savingGoal: savingGoal))),
                               onLongPress: () => CustomDialog.customDialog(
                                   title: 'Dodaj kwote',
                                   subtitle: 'Podaj zaoszczędzoną kwotę',
@@ -116,7 +112,8 @@ class SavingGoalsScreen extends StatelessWidget {
                                   icon: Icons.add),
                               child: Card(
                                 color: AppColors.secondary,
-                                shape: savingGoal.status
+                                shape: savingGoal.currentAmount ==
+                                        savingGoal.goal
                                     ? RoundedRectangleBorder(
                                         side: BorderSide(
                                           color: AppColors.greenColorGradient
@@ -186,7 +183,8 @@ class SavingGoalsScreen extends StatelessWidget {
                                           //     AppColors.greenColorGradient,
                                         ),
                                       ),
-                                      savingGoal.status
+                                      savingGoal.currentAmount ==
+                                              savingGoal.goal
                                           ? Align(
                                               alignment: Alignment.center,
                                               child: Padding(

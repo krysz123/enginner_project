@@ -3,6 +3,7 @@ import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class SingleChartScrenn extends StatelessWidget {
@@ -42,8 +43,8 @@ class SingleChartScrenn extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.question_mark_rounded,
+                        FaIcon(
+                          FontAwesomeIcons.question,
                           color: AppColors.textSecondaryColor,
                           size: 50,
                         ),

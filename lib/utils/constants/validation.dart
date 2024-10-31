@@ -72,6 +72,20 @@ class Validator {
     return null;
   }
 
+  static String? validateOptionalNumbersOnly(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    final numbersOnlyRegExp = RegExp(r'^\d+([.,]\d+)?$');
+
+    if (!numbersOnlyRegExp.hasMatch(value)) {
+      return 'Wartość może zawierać tylko liczby całkowite lub zmiennoprzecinkowe';
+    }
+
+    return null;
+  }
+
   static String? validateDropdownSelection(String? value) {
     const defaultOption = null;
 

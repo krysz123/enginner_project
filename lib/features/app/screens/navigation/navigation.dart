@@ -5,6 +5,7 @@ import 'package:enginner_project/features/personalization/controllers/user_contr
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class NavigationScreen extends StatelessWidget {
@@ -32,27 +33,59 @@ class NavigationScreen extends StatelessWidget {
           children: [
             CustomDrawerHeader(controller: userController),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.house, size: 35),
+                icon: const FaIcon(
+                  FontAwesomeIcons.house,
+                  color: AppColors.textSecondaryColor,
+                  size: 30,
+                ),
                 label: Text('Ekran główny',
                     style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.credit_card_sharp, size: 35),
+                icon: const FaIcon(
+                  FontAwesomeIcons.creditCard,
+                  color: AppColors.textSecondaryColor,
+                  size: 30,
+                ),
                 label: Text('Karty lojalnościowe',
                     style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.monetization_on_outlined, size: 35),
+                icon: const FaIcon(
+                  FontAwesomeIcons.crosshairs,
+                  color: AppColors.textSecondaryColor,
+                  size: 30,
+                ),
                 label: Text('Cele oszczędnościowe',
                     style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.analytics_outlined, size: 35),
+                icon: const FaIcon(
+                  FontAwesomeIcons.chartSimple,
+                  color: AppColors.textSecondaryColor,
+                  size: 30,
+                ),
+                label:
+                    Text('Wykresy', style: TextAppTheme.textTheme.bodyLarge)),
+            NavigationDrawerDestination(
+                icon: const FaIcon(
+                  FontAwesomeIcons.calculator,
+                  color: AppColors.textSecondaryColor,
+                  size: 30,
+                ),
                 label: Text('Statystyki',
                     style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.person, size: 35),
+                icon: const FaIcon(
+                  FontAwesomeIcons.userGroup,
+                  color: AppColors.textSecondaryColor,
+                  size: 30,
+                ),
                 label:
                     Text('Znajomi', style: TextAppTheme.textTheme.bodyLarge)),
             NavigationDrawerDestination(
-                icon: const Icon(Icons.people, size: 35),
+                icon: const FaIcon(
+                  FontAwesomeIcons.moneyBills,
+                  color: AppColors.textSecondaryColor,
+                  size: 30,
+                ),
                 label: Text('Wspólne rachunki',
                     style: TextAppTheme.textTheme.bodyLarge)),
             const Padding(

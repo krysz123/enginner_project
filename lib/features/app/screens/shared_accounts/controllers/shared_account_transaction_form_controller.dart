@@ -1,7 +1,9 @@
+import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/enums/expense_type.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/models/expense_model.dart';
+import 'package:enginner_project/models/shared_account_expense_model.dart';
 import 'package:enginner_project/utils/popups/full_screen_loader.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +11,14 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:workmanager/workmanager.dart';
 
-class ExpenseFormController extends GetxController {
-  static ExpenseFormController get instance => Get.find();
+class SharedAccountTransactionFormController extends GetxController {
+  static SharedAccountTransactionFormController get instance => Get.find();
 
   final title = TextEditingController();
   final amount = TextEditingController();
   final description = TextEditingController();
   final category = TextEditingController();
-  final paymentType = TextEditingController();
+  final expenseType = TextEditingController();
   final time = TextEditingController();
 
   Rx<String> selectedCategory = ''.obs;
@@ -58,10 +60,9 @@ class ExpenseFormController extends GetxController {
     }
   }
 
-  void saveExpense() async {
+  void saveExpense(String sharedAccountId) async {
     var uuid = const Uuid();
     String transactionId = uuid.v4();
-    String type = ExpenseTypeEnum.expense.label;
 
     try {
       if (!expenseFormKey.currentState!.validate()) {
@@ -72,46 +73,21 @@ class ExpenseFormController extends GetxController {
 
       final parsedAmount = double.parse(amount.text.trim());
 
-      if (isChecked.value) {
-        type = ExpenseTypeEnum.periodicExpense.label;
-      }
-
-      final newExpense = ExpenseModel(
+      final newExpense = SharedAccountExpenseModel(
         id: transactionId,
         title: title.text.trim(),
         amount: parsedAmount,
         category: selectedCategory.trim(),
         date: time.text.trim(),
         description: description.text.trim(),
-        expenseType: type,
+        expenseType: ExpenseTypeEnum.expense.label,
         paymentType: selectedPaymentType.trim(),
+        sender: UserController.instance.user.value.fullname,
       );
-      await userRepository.saveExpenseRecord(newExpense);
-      final balance = userController.totalBalance.value - parsedAmount;
 
-      userController.user.update((user) {
-        user!.totalBalance -= parsedAmount;
-      });
-
-      Map<String, dynamic> expense = {'TotalBalance': balance};
-      await userRepository.updateSingleField(expense);
-
-      if (isChecked.value) {
-        Workmanager().registerPeriodicTask(
-          transactionId,
-          transactionId,
-          frequency: const Duration(minutes: 15),
-          inputData: {
-            'Title': title.text,
-            'Amount': parsedAmount,
-            'Description': description.text,
-            'Category': selectedCategory.value,
-            'Type': ExpenseTypeEnum.periodicExpense.label,
-            'PaymentType': selectedPaymentType.value,
-          },
-        );
-      }
-
+      userRepository.saveSharedAccountExpense(newExpense, sharedAccountId);
+      userRepository.decrementSharedAccountCurrentBalance(
+          parsedAmount, sharedAccountId);
       FullScreenLoader.stopLoading();
 
       Get.back();
@@ -121,12 +97,12 @@ class ExpenseFormController extends GetxController {
     }
   }
 
-  void saveIncome() async {
+  void saveIncome(String sharedAccountId) async {
     var uuid = const Uuid();
     String transactionId = uuid.v4();
-    String type = ExpenseTypeEnum.income.label;
+
     try {
-      if (!incomeFormKey.currentState!.validate()) {
+      if (!expenseFormKey.currentState!.validate()) {
         return;
       }
 
@@ -134,49 +110,21 @@ class ExpenseFormController extends GetxController {
 
       final parsedAmount = double.parse(amount.text.trim());
 
-      if (isChecked.value) {
-        type = ExpenseTypeEnum.periodicIncome.label;
-      }
-
-      final newIncome = ExpenseModel(
+      final newExpense = SharedAccountExpenseModel(
         id: transactionId,
+        title: title.text.trim(),
         amount: parsedAmount,
         category: selectedCategory.trim(),
         date: time.text.trim(),
         description: description.text.trim(),
-        expenseType: type,
-        title: title.text.trim(),
+        expenseType: ExpenseTypeEnum.income.label,
         paymentType: selectedPaymentType.trim(),
+        sender: UserController.instance.user.value.fullname,
       );
 
-      await userRepository.saveExpenseRecord(newIncome);
-      final balance = userController.totalBalance.value + parsedAmount;
-
-      userController.user.update(
-        (user) {
-          user!.totalBalance += parsedAmount;
-        },
-      );
-
-      Map<String, dynamic> income = {'TotalBalance': balance};
-      await userRepository.updateSingleField(income);
-
-      if (isChecked.value) {
-        Workmanager().registerPeriodicTask(
-          transactionId,
-          transactionId,
-          frequency: const Duration(minutes: 15),
-          inputData: {
-            'Title': title.text,
-            'Amount': parsedAmount,
-            'Description': description.text,
-            'Category': selectedCategory.value,
-            'Type': ExpenseTypeEnum.periodicIncome.label,
-            'PaymentType': selectedPaymentType.value,
-          },
-        );
-      }
-
+      userRepository.saveSharedAccountExpense(newExpense, sharedAccountId);
+      userRepository.incrementSharedAccountCurrentBalance(
+          parsedAmount, sharedAccountId);
       FullScreenLoader.stopLoading();
 
       Get.back();

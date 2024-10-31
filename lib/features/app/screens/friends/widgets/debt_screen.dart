@@ -1,8 +1,12 @@
+import 'package:enginner_project/app.dart';
+import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/enums/debts_types_enum.dart';
 import 'package:enginner_project/enums/friend_status_enum.dart';
 import 'package:enginner_project/features/app/screens/friends/controllers/debt_screen_controller.dart';
+import 'package:enginner_project/features/app/screens/friends/widgets/debt_card_widget.dart';
 import 'package:enginner_project/features/app/screens/friends/widgets/new_debt_form.dart';
+import 'package:enginner_project/models/debt_model.dart';
 import 'package:enginner_project/models/friend_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
@@ -57,7 +61,7 @@ class DebtScreen extends StatelessWidget {
               children: [
                 Obx(
                   () => ToggleButtons(
-                    isSelected: controller.values,
+                    isSelected: controller.values.toList(),
                     constraints:
                         const BoxConstraints(minHeight: 50, minWidth: 100),
                     borderRadius: BorderRadius.circular(30),
@@ -76,9 +80,10 @@ class DebtScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: 20),
                 Expanded(
                     child: StreamBuilder(
-                  stream: UserRepository.instance.streamInvitations(),
+                  stream: UserRepository.instance.streamAllDebts(friend.id),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -115,100 +120,35 @@ class DebtScreen extends StatelessWidget {
                         final debt = allDebts[index];
 
                         return GestureDetector(
-                          onLongPress: () {},
+                          onLongPress: () => (!debt.status &&
+                                  debt.type == DebtsTypesEnum.debts.label)
+                              ? CustomDialog.customDialog(
+                                  title: 'Oznacz jako oddane',
+                                  subtitle:
+                                      'Poinformuj ${friend.fullname} o oddaniu pieniędzy',
+                                  widget: Center(
+                                    child: CustomButton(
+                                      text: 'Oddaj',
+                                      height: 50,
+                                      width: 200,
+                                      redirection: () {
+                                        UserRepository.instance
+                                            .setDebtAsReturned(
+                                          friend.id,
+                                          debt.id,
+                                        );
+                                        Get.back();
+                                      },
+                                      colorGradient1:
+                                          AppColors.greenColorGradient,
+                                      colorGradient2: AppColors.blueButton,
+                                    ),
+                                  ),
+                                  icon: Icons.abc)
+                              : () {},
                           child: Obx(
-                            () => controller.type.value == debt.fullname
-                                ? Card(
-                                    color: AppColors.secondary,
-                                    child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 15, horizontal: 20),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    debt.fullname,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextAppTheme
-                                                        .textTheme.titleMedium,
-                                                  ),
-                                                  Text(
-                                                    debt.email,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            if (debt.status ==
-                                                FriendStatusEnum
-                                                    .invitation.label) ...[
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () => UserRepository
-                                                        .instance
-                                                        .acceptInvite(debt.id),
-                                                    child: Container(
-                                                      width: 40,
-                                                      height: 40,
-                                                      decoration: BoxDecoration(
-                                                        gradient:
-                                                            const LinearGradient(
-                                                          colors: [
-                                                            AppColors
-                                                                .greenColorGradient,
-                                                            AppColors
-                                                                .blueButton,
-                                                          ],
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: const Icon(
-                                                          Icons.check),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  GestureDetector(
-                                                    onTap: () =>
-                                                        Snackbars.errorSnackbar(
-                                                            title: 'adsas',
-                                                            message: 'sdas'),
-                                                    child: Container(
-                                                      width: 40,
-                                                      height: 40,
-                                                      decoration: BoxDecoration(
-                                                        gradient:
-                                                            const LinearGradient(
-                                                          colors: [
-                                                            AppColors
-                                                                .redColorGradient,
-                                                            AppColors
-                                                                .blueButton,
-                                                          ],
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: const Icon(
-                                                          Icons.close),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ]
-                                          ],
-                                        )),
-                                  )
+                            () => controller.type.value == debt.type
+                                ? DebtCardWidget(debt: debt)
                                 : const SizedBox(),
                           ),
                         );

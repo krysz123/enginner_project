@@ -8,12 +8,9 @@ import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:workmanager/workmanager.dart';
 
 class IncomeForm extends StatelessWidget {
-  const IncomeForm({
-    super.key,
-  });
+  const IncomeForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +77,16 @@ class IncomeForm extends StatelessWidget {
                 .map(
                   (e) => DropdownMenuItem(
                     value: e.label,
-                    child: Text(
-                      e.label,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
+                    child: Row(
+                      children: [
+                        Icon(IncomeCategory.returnIcon(e.label)),
+                        const SizedBox(width: 10),
+                        Text(
+                          e.label,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ],
                     ),
                   ),
                 )
@@ -103,7 +106,17 @@ class IncomeForm extends StatelessWidget {
             items: PaymentTypeEnum.values
                 .map((e) => DropdownMenuItem(
                       value: e.label,
-                      child: Text(e.label),
+                      child: Row(
+                        children: [
+                          Icon(PaymentTypeEnum.returnIcon(e.label)),
+                          const SizedBox(width: 10),
+                          Text(
+                            e.label,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ],
+                      ),
                     ))
                 .toList(),
             onChanged: (value) => controller.changePaymentType(value),
@@ -117,16 +130,6 @@ class IncomeForm extends StatelessWidget {
                   height: 40,
                   width: 12,
                   redirection: (() => Get.back()),
-                  colorGradient1: AppColors.redColorGradient,
-                  colorGradient2: AppColors.blueButton,
-                ),
-              ),
-              Expanded(
-                child: CustomButton(
-                  text: 'usun wszystok',
-                  height: 40,
-                  width: 12,
-                  redirection: (() => Workmanager().cancelAll()),
                   colorGradient1: AppColors.redColorGradient,
                   colorGradient2: AppColors.blueButton,
                 ),
