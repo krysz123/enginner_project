@@ -8,7 +8,9 @@ import 'package:enginner_project/features/app/screens/main_screen/controllers/ma
 import 'package:enginner_project/features/app/screens/shared_accounts/controllers/shared_account_main_screen_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SharedAccountTransactionFilterForm extends StatelessWidget {
@@ -175,13 +177,20 @@ class SharedAccountTransactionFilterForm extends StatelessWidget {
               value: controller.selectedUserName.value.isEmpty
                   ? null
                   : controller.selectedUserName.value,
-              hint: const Text("Wybierz użytkownika"),
+              hint: const Text(
+                "Wybierz użytkownika",
+                overflow: TextOverflow.ellipsis,
+              ),
+              isExpanded: true,
               dropdownColor: AppColors.primary,
               items: controller.users.map((user) {
                 String displayName = '${user['firstName']} ${user['lastName']}';
                 return DropdownMenuItem(
                   value: displayName,
-                  child: Text(displayName),
+                  child: Text(
+                    displayName,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 );
               }).toList(),
               onChanged: (value) => controller.changeUser(value),

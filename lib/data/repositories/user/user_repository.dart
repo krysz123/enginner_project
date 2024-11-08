@@ -822,6 +822,25 @@ class UserRepository extends GetxController {
     }
   }
 
+  Future<void> inviteToSharedAccount(String sharedAccountId, memberId) async {
+    try {
+      await _db
+          .collection("SharedAccounts")
+          .doc(sharedAccountId)
+          .update({'Members.$memberId': false});
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
   Stream<List<SharedAccountModel>> streamSharedAccountInvitations() {
     return _db
         .collection("SharedAccounts")
@@ -1029,6 +1048,114 @@ class UserRepository extends GetxController {
       throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw 'Coś poszło nie tak. Spróbuj ponownie';
+    }
+  }
+
+  Stream<List<Map<String, String>>> streamUsersToSharedAccount(
+      String sharedAccountId, bool isMember) async* {
+    try {
+      await for (DocumentSnapshot<Map<String, dynamic>> sharedAccountSnapshot
+          in _db
+              .collection("SharedAccounts")
+              .doc(sharedAccountId)
+              .snapshots()) {
+        if (sharedAccountSnapshot.exists) {
+          Map<String, dynamic> members = sharedAccountSnapshot.get('Members');
+
+          List<String> userIds = members.entries
+              .where((entry) => entry.value == isMember)
+              .map((entry) => entry.key)
+              .toList();
+
+          List<Map<String, String>> friends = [];
+
+          for (String userId in userIds) {
+            DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+                await _db.collection('Users').doc(userId).get();
+
+            if (userSnapshot.exists) {
+              final data = userSnapshot.data();
+
+              if (data != null) {
+                friends.add({
+                  'id': userId,
+                  'FirstName': '${data['FirstName']}',
+                  'LastName': '${data['LastName']}',
+                  'Email': '${data['Email']}',
+                });
+              }
+            } else {
+              throw 'Nie odnaleziono';
+            }
+          }
+
+          yield friends;
+        } else {
+          throw 'Dokument nie istnieje';
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again.';
+    }
+  }
+
+  Stream<List<Map<String, String>>> streamUsersNotInSharedAccount(
+      String sharedAccountId) async* {
+    try {
+      await for (DocumentSnapshot<Map<String, dynamic>> sharedAccountSnapshot
+          in _db
+              .collection("SharedAccounts")
+              .doc(sharedAccountId)
+              .snapshots()) {
+        if (sharedAccountSnapshot.exists) {
+          Map<String, dynamic> members =
+              sharedAccountSnapshot.get('Members') ?? {};
+
+          List<Map<String, String>> nonMembers = [];
+
+          QuerySnapshot<Map<String, dynamic>> usersSnapshot = await _db
+              .collection('Users')
+              .doc(AuthenticationRepository.instance.authUser?.uid)
+              .collection('Friends')
+              .where('Status', isEqualTo: 'Zaakceptowane')
+              .get();
+
+          for (var doc in usersSnapshot.docs) {
+            String userId = doc.id;
+
+            if (!members.containsKey(userId) || members[userId] == false) {
+              final data = doc.data();
+
+              nonMembers.add({
+                'id': userId,
+                'Fullname': '${data['Fullname']}',
+              });
+            }
+          }
+
+          yield nonMembers;
+        } else {
+          throw 'Błąd! Dokument nie istnieje.';
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Coś poszło nie tak. Spróbuj ponownie.';
     }
   }
 

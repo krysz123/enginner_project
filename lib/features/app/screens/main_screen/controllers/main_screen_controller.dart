@@ -124,6 +124,9 @@ class MainScreenController extends GetxController {
       } else {
         minAmountValue = double.parse(minAmount.text);
       }
+      if (double.parse(minAmount.text) >= double.parse(maxAmount.text)) {
+        throw 'Wybierz odpowiedni przedział kwot';
+      }
 
       if (maxAmount.text.isEmpty) {
         maxAmountValue = double.infinity;
@@ -142,9 +145,6 @@ class MainScreenController extends GetxController {
           .isBefore(DateTime.parse(endingDate.text))) {
         throw 'Wybierz poprawny przedział czasowy';
       }
-
-      print(startingDate.text);
-      print(endingDate.text);
 
       filteredExpenses.value = expenses.where((transaction) {
         final matchesTitles =

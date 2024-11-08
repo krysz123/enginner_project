@@ -32,7 +32,12 @@ class CustomDrawerHeader extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
               vertical: Sizes.sm,
             ),
-            child: Obx(() => Text(controller.user.value.fullname)),
+            child: Obx(
+              () => Text(
+                controller.user.value.fullname,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ),
         ],
       ),

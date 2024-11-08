@@ -44,14 +44,52 @@ class SharedAccountMainScreen extends StatelessWidget {
                     AuthenticationRepository.instance.authUser!.email!
                 ? IconButton(
                     onPressed: () => Get.to(
-                      ManageSharedAccountScreen(sharedAccount: sharedAccount),
+                      () => ManageSharedAccountScreen(
+                          sharedAccount: sharedAccount),
                     ),
                     icon: const Icon(
                       Icons.settings,
                       size: 30,
                     ),
                   )
-                : const SizedBox()
+                : IconButton(
+                    onPressed: () => CustomDialog.customDialog(
+                        title: 'Opuść konto wspólne',
+                        subtitle:
+                            'Czy na pewno chcesz opuścić konto wspólne ${sharedAccount.title}',
+                        widget: Row(
+                          children: [
+                            Expanded(
+                              child: CustomButton(
+                                  text: 'Cofnij',
+                                  height: 50,
+                                  width: 30,
+                                  redirection: () => Get.back(),
+                                  colorGradient1: AppColors.loginBackgorund1,
+                                  colorGradient2: AppColors.blueButton),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: CustomButton(
+                                  text: 'Opuść',
+                                  height: 50,
+                                  width: 30,
+                                  redirection: () {
+                                    UserRepository.instance
+                                        .rejectInviteToSharedAccount(
+                                            AuthenticationRepository
+                                                .instance.authUser!.uid,
+                                            sharedAccount.id);
+                                    Get.back();
+                                  },
+                                  colorGradient1: AppColors.blueButton,
+                                  colorGradient2: AppColors.redColorGradient),
+                            )
+                          ],
+                        ),
+                        icon: FontAwesomeIcons.arrowRightToBracket),
+                    icon: const Icon(FontAwesomeIcons.arrowRightToBracket),
+                  )
           ],
         ),
         extendBodyBehindAppBar: true,

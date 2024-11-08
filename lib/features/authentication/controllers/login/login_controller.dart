@@ -20,24 +20,17 @@ class LoginController extends GetxController {
 
   void signIn() async {
     try {
-      //VALIDATION
       if (!loginFormKey.currentState!.validate()) {
         return;
       }
-      //INTERNET
+
       final isConnected = await NetworkConnection.instance.isConnected();
       if (!isConnected) {
         throw 'Brak połączenia z internetem';
       }
-      //LOADER
+
       Get.to(() => const FullScreenLoader());
 
-      //! SHARED PREFERENCES FOR REMEMBER USER
-      // final shprf = await SharedPreferences.getInstance();
-      // shprf.setString('EMAIL', email.text.trim());
-      // shprf.setString('PASSWORD', password.text.trim());
-
-      //LOGIN
       await AuthenticationRepository.instance
           .login(email.text.trim(), password.text.trim());
 
@@ -45,7 +38,6 @@ class LoginController extends GetxController {
 
       AuthenticationRepository.instance.redirectScreen();
     } catch (e) {
-      FullScreenLoader.stopLoading();
       Snackbars.errorSnackbar(title: 'Błąd!', message: e.toString());
     }
   }

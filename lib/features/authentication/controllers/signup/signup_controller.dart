@@ -64,7 +64,6 @@ class SignupController extends GetxController {
       //MOVE TO VERIFY EMAIL
       Get.offAll(() => EmailVerificationScreen(email: email.text.trim()));
     } catch (e) {
-      FullScreenLoader.stopLoading();
       Snackbars.errorSnackbar(title: 'Błąd!', message: e.toString());
     }
   }

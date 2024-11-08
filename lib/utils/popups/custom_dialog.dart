@@ -59,7 +59,7 @@ class CustomDialog {
                                       style: TextAppTheme.textTheme.labelMedium,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
+                                      maxLines: 5,
                                     ),
                                   ],
                                 ),
