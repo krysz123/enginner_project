@@ -1,6 +1,6 @@
 import 'package:enginner_project/features/app/screens/shared_accounts/controllers/shared_account_manage_controller.dart';
 import 'package:enginner_project/features/app/screens/shared_accounts/widgets/friends_to_invite_widget.dart';
-import 'package:enginner_project/features/app/screens/shared_accounts/widgets/members_list_widget.dart';
+import 'package:enginner_project/features/app/screens/shared_accounts/widgets/members_shared_account_managelist_widget.dart';
 import 'package:enginner_project/models/shared_account_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class ManageSharedAccountScreen extends StatelessWidget {
                 controller: controller.pageViewController,
                 onPageChanged: (value) => controller.updatePage(value),
                 children: [
-                  MembersListWidget(
+                  MembersSharedAccountManageListWidget(
                     sharedAccount: sharedAccount,
                     controller: controller,
                   ),

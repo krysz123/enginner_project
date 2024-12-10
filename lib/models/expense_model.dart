@@ -10,15 +10,16 @@ class ExpenseModel {
   String expenseType;
   String paymentType;
 
-  ExpenseModel(
-      {required this.id,
-      required this.amount,
-      required this.category,
-      required this.date,
-      required this.description,
-      required this.expenseType,
-      required this.title,
-      required this.paymentType});
+  ExpenseModel({
+    required this.id,
+    required this.amount,
+    required this.category,
+    required this.date,
+    required this.description,
+    required this.expenseType,
+    required this.title,
+    required this.paymentType,
+  });
 
   Map<String, dynamic> toJson() {
     return {

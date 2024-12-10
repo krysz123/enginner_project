@@ -6,6 +6,7 @@ import 'package:enginner_project/models/saving_goal_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
+import 'package:enginner_project/utils/popups/custom_tooltip.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,10 +20,11 @@ class SavingGoalsScreen extends StatelessWidget {
     final appBarHeight = DeviceUtility.getAppBarHeight();
 
     double displayPercent(double current, double goal) {
-      double value = current / goal * 100;
-      double roundedValue = double.parse(value.toStringAsFixed(2));
+      double value = current / goal * 100.0;
 
-      return roundedValue;
+      double truncatedValue = (value * 100).toInt() / 100.0;
+
+      return truncatedValue;
     }
 
     double countPercent(double current, double goal) {
@@ -140,16 +142,25 @@ class SavingGoalsScreen extends StatelessWidget {
                                       const SizedBox(height: 10),
                                       Row(
                                         children: [
-                                          Text(
-                                            savingGoal.currentAmount.toString(),
-                                            style: TextAppTheme
-                                                .textTheme.titleMedium,
+                                          CustomTooltip(
+                                            message:
+                                                'Aktualnie zaoszczędzona kwota',
+                                            child: Text(
+                                              savingGoal.currentAmount
+                                                  .toString(),
+                                              style: TextAppTheme
+                                                  .textTheme.titleMedium,
+                                            ),
                                           ),
                                           const Spacer(),
-                                          Text(
-                                            savingGoal.goal.toString(),
-                                            style: TextAppTheme
-                                                .textTheme.titleMedium,
+                                          CustomTooltip(
+                                            message: 'Cel oszczędnościowy',
+                                            child: Text(
+                                              savingGoal.currentAmount
+                                                  .toString(),
+                                              style: TextAppTheme
+                                                  .textTheme.titleMedium,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -159,13 +170,11 @@ class SavingGoalsScreen extends StatelessWidget {
                                         child: LinearPercentIndicator(
                                           animation: true,
                                           lineHeight: 30.0,
-
                                           animationDuration: 2000,
                                           barRadius: const Radius.circular(30),
                                           percent: countPercent(
                                               savingGoal.currentAmount,
                                               savingGoal.goal),
-
                                           center: Text(
                                             '${displayPercent(savingGoal.currentAmount, savingGoal.goal)} %',
                                             style: TextAppTheme
@@ -179,8 +188,6 @@ class SavingGoalsScreen extends StatelessWidget {
                                               AppColors.greenColorGradient
                                             ],
                                           ),
-                                          // progressColor:
-                                          //     AppColors.greenColorGradient,
                                         ),
                                       ),
                                       savingGoal.currentAmount ==

@@ -53,7 +53,7 @@ class CustomTextField extends StatelessWidget {
           ),
           contentPadding: const EdgeInsets.fromLTRB(15, 25, 25, 10),
           filled: true,
-          errorMaxLines: 2,
+          errorMaxLines: 5,
           fillColor: AppColors.primary,
           hintText: hintText,
           hintStyle: TextAppTheme.textTheme.bodySmall,

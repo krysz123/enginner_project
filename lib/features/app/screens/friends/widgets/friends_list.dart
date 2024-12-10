@@ -1,3 +1,4 @@
+import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/features/app/screens/friends/controllers/friends_controller.dart';
 import 'package:enginner_project/features/app/screens/friends/widgets/debt_screen.dart';
@@ -5,6 +6,7 @@ import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class FriendsList extends StatelessWidget {
@@ -80,7 +82,66 @@ class FriendsList extends StatelessWidget {
                               Text(
                                 friend.email,
                               ),
-                              Text(friend.status)
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: CustomButton(
+                                          text: 'Usuń znajomego',
+                                          height: 40,
+                                          width: 40,
+                                          redirection: () =>
+                                              CustomDialog.customDialog(
+                                                  title: 'Usuń znajomego',
+                                                  subtitle:
+                                                      'Czy na pewno chcesz usunąć znajomego?',
+                                                  widget: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: CustomButton(
+                                                            text: 'Zamknij',
+                                                            height: 50,
+                                                            width: 30,
+                                                            redirection: () =>
+                                                                Get.back(),
+                                                            colorGradient1:
+                                                                AppColors
+                                                                    .loginBackgorund1,
+                                                            colorGradient2:
+                                                                AppColors
+                                                                    .blueButton),
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CustomButton(
+                                                            text: 'Usuń',
+                                                            height: 50,
+                                                            width: 30,
+                                                            redirection: () {
+                                                              UserRepository
+                                                                  .instance
+                                                                  .deleteFriend(
+                                                                      friend
+                                                                          .id);
+                                                              Get.back();
+                                                              Get.back();
+                                                            },
+                                                            colorGradient1:
+                                                                AppColors
+                                                                    .blueButton,
+                                                            colorGradient2:
+                                                                AppColors
+                                                                    .redColorGradient),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  icon:
+                                                      FontAwesomeIcons.person),
+                                          colorGradient1:
+                                              AppColors.redColorGradient,
+                                          colorGradient2: AppColors.blueButton))
+                                ],
+                              )
                             ],
                           ),
                           icon: Icons.people);
@@ -117,19 +178,6 @@ class FriendsList extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            // const SizedBox(width: 10),
-                            // GestureDetector(
-                            //   onTap: () {},
-                            //   child: Container(
-                            //     width: 40,
-                            //     height: 40,
-                            //     decoration: BoxDecoration(
-                            //       borderRadius: BorderRadius.circular(10),
-                            //       color: AppColors.blueButton,
-                            //     ),
-                            //     child: const Icon(Icons.room),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

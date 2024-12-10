@@ -17,7 +17,7 @@ class LoyaltyCardsController extends GetxController {
       var result = await BarcodeScanner.scan(
         options: const ScanOptions(
           strings: {
-            'cancel': 'Cofnij',
+            'cancel': 'Zamknij',
             'flash_on': 'Włącz latarke',
             'flash_off': 'Wyłącz latarke',
           },

@@ -627,6 +627,34 @@ class UserRepository extends GetxController {
     }
   }
 
+  Future<void> deleteFriend(String friendId) async {
+    try {
+      await _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .collection("Friends")
+          .doc(friendId)
+          .delete();
+
+      await _db
+          .collection("Users")
+          .doc(friendId)
+          .collection("Friends")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .delete();
+    } on FirebaseAuthException catch (e) {
+      throw CustomFirebaseAuthException(e.code).message;
+    } on FirebaseException catch (e) {
+      throw CustomFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CustomFormatException();
+    } on PlatformException catch (e) {
+      throw CustomPlatformException(e.code).message;
+    } catch (e) {
+      throw '$e';
+    }
+  }
+
   Future<void> acceptInvite(String friendId) async {
     try {
       await _db
@@ -651,7 +679,6 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw CustomPlatformException(e.code).message;
     } catch (e) {
-      print('Error $e');
       throw '$e';
     }
   }
@@ -673,7 +700,6 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw CustomPlatformException(e.code).message;
     } catch (e) {
-      print('Error $e');
       throw '$e';
     }
   }
@@ -705,6 +731,16 @@ class UserRepository extends GetxController {
         .map((querySnapshot) => querySnapshot.docs
             .map((doc) => FriendModel.fromSnapshot(doc))
             .toList());
+  }
+
+  Stream<int> streamFriendsInvitationsCount() {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("Friends")
+        .where("Status", isEqualTo: FriendStatusEnum.invitation.label)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.size);
   }
 
   Future<void> saveNewDebt(String friendId, DebtModel model) async {
@@ -841,6 +877,17 @@ class UserRepository extends GetxController {
     }
   }
 
+  Stream<int> streamSharedAccountInvitationsCount() {
+    return _db
+        .collection("SharedAccounts")
+        .where(
+          'Members.${AuthenticationRepository.instance.authUser?.uid}',
+          isEqualTo: false,
+        )
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs.length);
+  }
+
   Stream<List<SharedAccountModel>> streamSharedAccountInvitations() {
     return _db
         .collection("SharedAccounts")
@@ -868,7 +915,6 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw CustomPlatformException(e.code).message;
     } catch (e) {
-      print('Error $e');
       throw '$e';
     }
   }
@@ -889,7 +935,6 @@ class UserRepository extends GetxController {
     } on PlatformException catch (e) {
       throw CustomPlatformException(e.code).message;
     } catch (e) {
-      print('Error $e');
       throw '$e';
     }
   }

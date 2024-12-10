@@ -36,8 +36,7 @@ class CustomDialog {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .center, // Dodane wyrównanie w pionie
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 icon,
@@ -62,6 +61,18 @@ class CustomDialog {
                                       maxLines: 5,
                                     ),
                                   ],
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  onTap: () => Get.back(),
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 30,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],

@@ -20,6 +20,7 @@ class LoginController extends GetxController {
 
   void signIn() async {
     try {
+      Get.to(() => const FullScreenLoader());
       if (!loginFormKey.currentState!.validate()) {
         return;
       }
@@ -29,8 +30,6 @@ class LoginController extends GetxController {
         throw 'Brak połączenia z internetem';
       }
 
-      Get.to(() => const FullScreenLoader());
-
       await AuthenticationRepository.instance
           .login(email.text.trim(), password.text.trim());
 
@@ -38,6 +37,7 @@ class LoginController extends GetxController {
 
       AuthenticationRepository.instance.redirectScreen();
     } catch (e) {
+      FullScreenLoader.stopLoading();
       Snackbars.errorSnackbar(title: 'Błąd!', message: e.toString());
     }
   }

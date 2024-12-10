@@ -17,13 +17,13 @@ class AddSavingAmountForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(AddSavingAmountFormController());
 
-    String calculateAmountToFinish() {
+    double calculateAmountToFinish() {
       double amountToFinish = savingGoal.goal - savingGoal.currentAmount;
 
       if (amountToFinish < 0) {
-        return '0';
+        return 0;
       } else {
-        return amountToFinish.toString();
+        return double.parse(amountToFinish.toStringAsFixed(2));
       }
     }
 
@@ -40,7 +40,7 @@ class AddSavingAmountForm extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(
-                'Pozostało: ${calculateAmountToFinish()} zł',
+                'Pozostało: ${calculateAmountToFinish()} PLN',
                 style: TextAppTheme.textTheme.titleSmall,
               ),
             ),
@@ -49,7 +49,7 @@ class AddSavingAmountForm extends StatelessWidget {
                 const SizedBox(height: 50),
                 Expanded(
                   child: CustomButton(
-                    text: 'Cofnij',
+                    text: 'Zamknij',
                     height: 40,
                     width: 12,
                     redirection: (() => Get.back()),

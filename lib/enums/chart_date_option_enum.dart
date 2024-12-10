@@ -1,5 +1,7 @@
 enum ChartDateOptionEnum {
   month,
   year,
-  week;
+  week,
+  custom,
+  flag;
 }

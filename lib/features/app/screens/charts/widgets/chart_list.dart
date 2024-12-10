@@ -1,10 +1,15 @@
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
+import 'package:enginner_project/features/app/screens/charts/widgets/categories_summary.dart';
+import 'package:enginner_project/features/app/screens/charts/widgets/exepnses_summary_chart.dart';
+import 'package:enginner_project/features/app/screens/charts/widgets/incomes_summary.dart';
 import 'package:enginner_project/features/app/screens/charts/widgets/single_chart.dart';
 import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ListCharts {
   List<Widget> get chartList {
@@ -78,7 +83,7 @@ class ListCharts {
                   padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     formatDate(transaction.date),
-                    style: TextAppTheme.textTheme.titleSmall,
+                    style: TextAppTheme.textTheme.labelMedium,
                   ),
                 );
               }
@@ -103,38 +108,47 @@ class ListCharts {
 
     return [
       SingleChartScrenn(
-        title: 'Wykres wydatków',
+        title: 'Wydatki',
         stream: UserRepository.instance.streamOnlyExpenses(),
-        buildChart: (allTransactions) => LineChart(
-          LineChartData(
-            lineBarsData: getBarsData(allTransactions),
-            titlesData: getTitlesData(allTransactions),
-            borderData: FlBorderData(show: false),
-            maxY: getMaxY(allTransactions),
-            minY: 0,
-          ),
+        buildChart: (allTransactions) {
+          return LineChart(
+            LineChartData(
+              lineBarsData: getBarsData(allTransactions),
+              titlesData: getTitlesData(allTransactions),
+              borderData: FlBorderData(show: false),
+              maxY: getMaxY(allTransactions),
+              minY: 0,
+            ),
+          );
+        },
+        buildSummary: (allFilteredTransactions, allTransactions) =>
+            ExpensesSummaryChart(
+          allFilteredTransactions: allFilteredTransactions,
+          allTransactions: allTransactions,
         ),
       ),
       SingleChartScrenn(
-        title: 'Wykres przychodu',
+        title: 'Przychody',
         stream: UserRepository.instance.streamOnlyIncomes(),
-        buildChart: (allTransactions) => LineChart(
-          LineChartData(
-            lineBarsData: getBarsData(allTransactions),
-            titlesData: getTitlesData(allTransactions),
-            borderData: FlBorderData(show: false),
-            maxY: getMaxY(allTransactions),
-            minY: 0,
-          ),
-        ),
+        buildChart: (allTransactions) {
+          return LineChart(
+            LineChartData(
+              lineBarsData: getBarsData(allTransactions),
+              titlesData: getTitlesData(allTransactions),
+              borderData: FlBorderData(show: false),
+              maxY: getMaxY(allTransactions),
+              minY: 0,
+            ),
+          );
+        },
+        buildSummary: (allFilteredTransactions, allTransactions) =>
+            IncomesSummaryChart(
+                allFilteredTransactions: allFilteredTransactions,
+                allTransactions: allTransactions),
       ),
-      const Text('Siema'),
-      const Text('Siema'),
-      const Text('Siema'),
-      const Text('Siema'),
-      const Text('Siema'),
-      const Text('Siema'),
-      const Text('Siema'),
+      CategoriesSummaryWidget(
+        transactions: UserRepository.instance.streamAllTransactions(),
+      )
     ];
   }
 }

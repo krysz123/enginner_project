@@ -56,12 +56,6 @@ class AddSavingAmountFormController extends GetxController {
 
       userRepository.decrementCurrentBalance(parsedAmount);
 
-      // if (savingGoal.currentAmount + parsedAmount >= savingGoal.goal) {
-      //   Map<String, dynamic> endedGoal = {'Status': true};
-
-      //   userRepository.updateEndedSavingGoal(endedGoal, savingGoal.id);
-      // }
-
       FullScreenLoader.stopLoading();
       Get.back();
     } catch (e) {

@@ -28,6 +28,7 @@ class SignupController extends GetxController {
 
   void signup() async {
     try {
+      Get.to(() => const FullScreenLoader());
       //VALIDATION
       if (!signupFormKey.currentState!.validate()) {
         return;
@@ -39,7 +40,6 @@ class SignupController extends GetxController {
       }
 
       // START LOADING
-      Get.to(() => const FullScreenLoader());
 
       //REGISTER IN FIREBASE
       final userCredentials = await AuthenticationRepository.instance
@@ -64,6 +64,7 @@ class SignupController extends GetxController {
       //MOVE TO VERIFY EMAIL
       Get.offAll(() => EmailVerificationScreen(email: email.text.trim()));
     } catch (e) {
+      FullScreenLoader.stopLoading();
       Snackbars.errorSnackbar(title: 'Błąd!', message: e.toString());
     }
   }

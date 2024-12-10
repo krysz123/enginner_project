@@ -83,7 +83,7 @@ class GoalPaymentsList extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${savingGoal["Amount"]} zł',
+                                  '${savingGoal["Amount"]} PLN',
                                   style: TextAppTheme.textTheme.headlineSmall,
                                   textAlign: TextAlign.end,
                                 ),

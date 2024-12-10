@@ -89,7 +89,7 @@ class FriendsToInviteWidget extends StatelessWidget {
                                   children: [
                                     Expanded(
                                       child: CustomButton(
-                                          text: 'Cofnij',
+                                          text: 'Zamknij',
                                           height: 50,
                                           width: 30,
                                           redirection: () => Get.back(),

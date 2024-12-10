@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-class MembersListWidget extends StatelessWidget {
-  const MembersListWidget({
+class MembersSharedAccountManageListWidget extends StatelessWidget {
+  const MembersSharedAccountManageListWidget({
     super.key,
     required this.sharedAccount,
     required this.controller,
@@ -89,7 +89,7 @@ class MembersListWidget extends StatelessWidget {
                                         children: [
                                           Expanded(
                                             child: CustomButton(
-                                                text: 'Cofnij',
+                                                text: 'Zamknij',
                                                 height: 50,
                                                 width: 30,
                                                 redirection: () => Get.back(),

@@ -1,8 +1,11 @@
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
+import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/features/app/screens/navigation/controllers/navigation_controller.dart';
 import 'package:enginner_project/features/app/screens/navigation/widgets/custom_drawer_header.dart';
+import 'package:enginner_project/features/app/screens/navigation/widgets/invitation_info.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
+import 'package:enginner_project/utils/popups/custom_tooltip.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,61 +36,115 @@ class NavigationScreen extends StatelessWidget {
           children: [
             CustomDrawerHeader(controller: userController),
             NavigationDrawerDestination(
-                icon: const FaIcon(
-                  FontAwesomeIcons.house,
-                  color: AppColors.textSecondaryColor,
-                  size: 30,
-                ),
-                label: Text('Ekran główny',
-                    style: TextAppTheme.textTheme.bodyLarge)),
+              icon: const FaIcon(
+                FontAwesomeIcons.house,
+                color: AppColors.textSecondaryColor,
+                size: 30,
+              ),
+              label: Text(
+                'Ekran główny',
+                style: TextAppTheme.textTheme.bodyLarge,
+              ),
+            ),
             NavigationDrawerDestination(
-                icon: const FaIcon(
-                  FontAwesomeIcons.creditCard,
-                  color: AppColors.textSecondaryColor,
-                  size: 30,
-                ),
-                label: Text('Karty lojalnościowe',
-                    style: TextAppTheme.textTheme.bodyLarge)),
+              icon: const FaIcon(
+                FontAwesomeIcons.creditCard,
+                color: AppColors.textSecondaryColor,
+                size: 30,
+              ),
+              label: Text(
+                'Karty lojalnościowe',
+                style: TextAppTheme.textTheme.bodyLarge,
+              ),
+            ),
             NavigationDrawerDestination(
-                icon: const FaIcon(
-                  FontAwesomeIcons.crosshairs,
-                  color: AppColors.textSecondaryColor,
-                  size: 30,
-                ),
-                label: Text('Cele oszczędnościowe',
-                    style: TextAppTheme.textTheme.bodyLarge)),
+              icon: const FaIcon(
+                FontAwesomeIcons.crosshairs,
+                color: AppColors.textSecondaryColor,
+                size: 30,
+              ),
+              label: Text(
+                'Cele oszczędnościowe',
+                style: TextAppTheme.textTheme.bodyLarge,
+              ),
+            ),
             NavigationDrawerDestination(
-                icon: const FaIcon(
-                  FontAwesomeIcons.chartSimple,
-                  color: AppColors.textSecondaryColor,
-                  size: 30,
-                ),
-                label:
-                    Text('Wykresy', style: TextAppTheme.textTheme.bodyLarge)),
+              icon: const FaIcon(
+                FontAwesomeIcons.chartSimple,
+                color: AppColors.textSecondaryColor,
+                size: 30,
+              ),
+              label: Text(
+                'Statystyki',
+                style: TextAppTheme.textTheme.bodyLarge,
+              ),
+            ),
             NavigationDrawerDestination(
-                icon: const FaIcon(
-                  FontAwesomeIcons.calculator,
-                  color: AppColors.textSecondaryColor,
-                  size: 30,
-                ),
-                label: Text('Statystyki',
-                    style: TextAppTheme.textTheme.bodyLarge)),
+              icon: const FaIcon(
+                FontAwesomeIcons.userGroup,
+                color: AppColors.textSecondaryColor,
+                size: 30,
+              ),
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Znajomi',
+                    style: TextAppTheme.textTheme.bodyLarge,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(width: 8),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 0,
+                      maxWidth: 36,
+                      maxHeight: 36,
+                    ),
+                    child: CustomTooltip(
+                      message: 'Masz nowe zaproszenia do grona znajomych',
+                      child: InvitationInfo(
+                        friendsCountStream: UserRepository.instance
+                            .streamFriendsInvitationsCount(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             NavigationDrawerDestination(
-                icon: const FaIcon(
-                  FontAwesomeIcons.userGroup,
-                  color: AppColors.textSecondaryColor,
-                  size: 30,
-                ),
-                label:
-                    Text('Znajomi', style: TextAppTheme.textTheme.bodyLarge)),
-            NavigationDrawerDestination(
-                icon: const FaIcon(
-                  FontAwesomeIcons.moneyBills,
-                  color: AppColors.textSecondaryColor,
-                  size: 30,
-                ),
-                label: Text('Wspólne rachunki',
-                    style: TextAppTheme.textTheme.bodyLarge)),
+              icon: const FaIcon(
+                FontAwesomeIcons.userGroup,
+                color: AppColors.textSecondaryColor,
+                size: 30,
+              ),
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Wspólne rachunki',
+                    style: TextAppTheme.textTheme.bodyLarge,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(width: 8),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 0,
+                      maxWidth: 36,
+                      maxHeight: 36,
+                    ),
+                    child: CustomTooltip(
+                      message: 'Masz nowe zaproszenia do konta wspólnego',
+                      child: InvitationInfo(
+                        friendsCountStream: UserRepository.instance
+                            .streamSharedAccountInvitationsCount(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Divider(height: 1),
@@ -99,7 +156,7 @@ class NavigationScreen extends StatelessWidget {
                 style: TextAppTheme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-            )
+            ),
           ],
         ),
       ),

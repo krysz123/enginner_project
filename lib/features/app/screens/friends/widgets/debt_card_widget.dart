@@ -60,7 +60,7 @@ class DebtCardWidget extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 40),
                           child: Text(
-                            '${debt.amount.toString()} zł',
+                            '${debt.amount.toString()} PLN',
                             overflow: TextOverflow.ellipsis,
                             style: TextAppTheme.textTheme.headlineSmall,
                           ),

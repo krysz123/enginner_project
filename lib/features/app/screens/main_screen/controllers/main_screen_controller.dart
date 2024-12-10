@@ -119,19 +119,22 @@ class MainScreenController extends GetxController {
         return;
       }
 
-      if (minAmount.text.isEmpty) {
-        minAmountValue = double.negativeInfinity;
-      } else {
-        minAmountValue = double.parse(minAmount.text);
-      }
-      if (double.parse(minAmount.text) >= double.parse(maxAmount.text)) {
-        throw 'Wybierz odpowiedni przedział kwot';
+      minAmountValue = minAmount.text.isEmpty
+          ? double.negativeInfinity
+          : double.tryParse(minAmount.text);
+      if (minAmountValue == null) {
+        throw 'Wprowadź prawidłową kwotę minimalną';
       }
 
-      if (maxAmount.text.isEmpty) {
-        maxAmountValue = double.infinity;
-      } else {
-        maxAmountValue = double.parse(maxAmount.text);
+      maxAmountValue = maxAmount.text.isEmpty
+          ? double.infinity
+          : double.tryParse(maxAmount.text);
+      if (maxAmountValue == null) {
+        throw 'Wprowadź prawidłową kwotę maksymalną';
+      }
+
+      if (minAmountValue >= maxAmountValue) {
+        throw 'Wybierz odpowiedni przedział kwot';
       }
 
       if (startingDate.text == '') {

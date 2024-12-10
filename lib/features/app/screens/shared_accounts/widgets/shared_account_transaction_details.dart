@@ -21,7 +21,7 @@ class SharedAccountTransactionDetails extends StatelessWidget {
         Row(
           children: [
             Text('Kwota: ', style: TextAppTheme.textTheme.titleMedium),
-            Text('${sharedAccountTransaction.amount.toString()} zł',
+            Text('${sharedAccountTransaction.amount.toString()} PLN',
                 style: TextAppTheme.textTheme.bodyLarge)
           ],
         ),
@@ -73,7 +73,7 @@ class SharedAccountTransactionDetails extends StatelessWidget {
         const SizedBox(height: 30),
         Center(
           child: CustomButton(
-            text: 'Cofnij',
+            text: 'Zamknij',
             height: 40,
             width: 150,
             redirection: (() => Get.back()),

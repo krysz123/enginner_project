@@ -7,6 +7,8 @@ import 'package:enginner_project/enums/income_category_enum.dart';
 import 'package:enginner_project/enums/payment_type_enum.dart';
 import 'package:enginner_project/features/app/screens/shared_accounts/controllers/shared_account_main_screen_controller.dart';
 import 'package:enginner_project/features/app/screens/shared_accounts/widgets/manage_shared_account.dart';
+import 'package:enginner_project/features/app/screens/shared_accounts/widgets/members_shared_account_managelist_widget.dart';
+import 'package:enginner_project/features/app/screens/shared_accounts/widgets/members_shared_account_widget.dart';
 import 'package:enginner_project/features/app/screens/shared_accounts/widgets/shared_account_income_form.dart';
 import 'package:enginner_project/features/app/screens/shared_accounts/widgets/shared_account_transaction_details.dart';
 import 'package:enginner_project/features/app/screens/shared_accounts/widgets/shared_account_expense_form.dart';
@@ -16,7 +18,9 @@ import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -54,41 +58,134 @@ class SharedAccountMainScreen extends StatelessWidget {
                   )
                 : IconButton(
                     onPressed: () => CustomDialog.customDialog(
-                        title: 'Opuść konto wspólne',
-                        subtitle:
-                            'Czy na pewno chcesz opuścić konto wspólne ${sharedAccount.title}',
-                        widget: Row(
+                        title: 'Konto wspólne: ${sharedAccount.title}',
+                        subtitle: 'Lista członków',
+                        widget: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Expanded(
-                              child: CustomButton(
-                                  text: 'Cofnij',
-                                  height: 50,
-                                  width: 30,
-                                  redirection: () => Get.back(),
-                                  colorGradient1: AppColors.loginBackgorund1,
-                                  colorGradient2: AppColors.blueButton),
+                            Container(
+                              constraints: const BoxConstraints(maxHeight: 300),
+                              child: MembersSharedAccountWidget(
+                                sharedAccount: sharedAccount,
+                              ),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: CustomButton(
-                                  text: 'Opuść',
-                                  height: 50,
-                                  width: 30,
-                                  redirection: () {
-                                    UserRepository.instance
-                                        .rejectInviteToSharedAccount(
-                                            AuthenticationRepository
-                                                .instance.authUser!.uid,
-                                            sharedAccount.id);
-                                    Get.back();
-                                  },
-                                  colorGradient1: AppColors.blueButton,
-                                  colorGradient2: AppColors.redColorGradient),
-                            )
+                            const SizedBox(height: 10),
+                            const Divider(
+                                height: 1, color: AppColors.textSecondaryColor),
+                            const SizedBox(height: 10),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.arrowRightFromBracket,
+                                  size: 30,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Opuść konto wspólne',
+                                        style:
+                                            TextAppTheme.textTheme.titleLarge,
+                                        softWrap: true,
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                      Text(
+                                        'Czy na pewno chcesz opuścić konto wspólne: ${sharedAccount.title}?',
+                                        style:
+                                            TextAppTheme.textTheme.labelMedium,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 5,
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomButton(
+                                      text: 'Zamknij',
+                                      height: 50,
+                                      width: 30,
+                                      redirection: () => Get.back(),
+                                      colorGradient1:
+                                          AppColors.loginBackgorund1,
+                                      colorGradient2: AppColors.blueButton),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButton(
+                                      text: 'Opuść',
+                                      height: 50,
+                                      width: 30,
+                                      redirection: () =>
+                                          CustomDialog.customDialog(
+                                            title:
+                                                'Potwierdź opuszczenie konta wspólnego',
+                                            subtitle:
+                                                'Upewnij się że chcesz opuścić to konto wspólne',
+                                            widget: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CustomButton(
+                                                      text: 'Zamknij',
+                                                      height: 50,
+                                                      width: 30,
+                                                      redirection: () {
+                                                        Get.back();
+                                                      },
+                                                      colorGradient1: AppColors
+                                                          .loginBackgorund1,
+                                                      colorGradient2:
+                                                          AppColors.blueButton),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Expanded(
+                                                  child: CustomButton(
+                                                      text: 'Opuść',
+                                                      height: 50,
+                                                      width: 30,
+                                                      redirection: () {
+                                                        UserRepository.instance
+                                                            .rejectInviteToSharedAccount(
+                                                                AuthenticationRepository
+                                                                    .instance
+                                                                    .authUser!
+                                                                    .uid,
+                                                                sharedAccount
+                                                                    .id);
+                                                        Get.back();
+                                                        Get.back();
+                                                        Get.back();
+                                                      },
+                                                      colorGradient1: AppColors
+                                                          .redColorGradient,
+                                                      colorGradient2:
+                                                          AppColors.blueButton),
+                                                ),
+                                                const SizedBox(width: 10),
+                                              ],
+                                            ),
+                                            icon: FontAwesomeIcons
+                                                .arrowRightFromBracket,
+                                          ),
+                                      colorGradient1: AppColors.blueButton,
+                                      colorGradient2:
+                                          AppColors.redColorGradient),
+                                )
+                              ],
+                            ),
                           ],
                         ),
-                        icon: FontAwesomeIcons.arrowRightToBracket),
-                    icon: const Icon(FontAwesomeIcons.arrowRightToBracket),
+                        icon: FontAwesomeIcons.info),
+                    icon: const Icon(FontAwesomeIcons.info),
                   )
           ],
         ),
@@ -115,7 +212,7 @@ class SharedAccountMainScreen extends StatelessWidget {
                         }
 
                         final totalBalance = snapshot.data ?? 0.0;
-                        return Text('$totalBalance zł',
+                        return Text('$totalBalance PLN',
                             style: TextAppTheme.textTheme.headlineSmall);
                       },
                     ),
@@ -352,14 +449,14 @@ class SharedAccountMainScreen extends StatelessWidget {
                                                               .periodicExpense
                                                               .label
                                                   ? Text(
-                                                      ' - ${transaction.amount} zł',
+                                                      ' - ${transaction.amount} PLN',
                                                       style: TextAppTheme
                                                           .textTheme.titleSmall!
                                                           .copyWith(
                                                               color: Colors
                                                                   .redAccent))
                                                   : Text(
-                                                      ' + ${transaction.amount} zł',
+                                                      ' + ${transaction.amount} PLN',
                                                       style: TextAppTheme
                                                           .textTheme.titleSmall,
                                                       textAlign:

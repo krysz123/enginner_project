@@ -99,7 +99,7 @@ class SharedAccountExpenseForm extends StatelessWidget {
               const SizedBox(height: 100),
               Expanded(
                 child: CustomButton(
-                  text: 'Cofnij',
+                  text: 'Zamknij',
                   height: 40,
                   width: 12,
                   redirection: (() => Get.back()),

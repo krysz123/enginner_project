@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-enum ExpenseCategory {
+enum AllCategories {
+  salary('Wynagrodzenie', FontAwesomeIcons.moneyBill),
+  business('Działalność gospodarcza', FontAwesomeIcons.briefcase),
+  freelance('Praca zdalna / Freelance', FontAwesomeIcons.houseLaptop),
+  investments('Inwestycje', FontAwesomeIcons.chartLine),
+  rentalIncome('Dochód z wynajmu', FontAwesomeIcons.building),
+  pensions('Emerytura', FontAwesomeIcons.landmark),
+  governmentBenefits(
+      'Świadczenia socjalne', FontAwesomeIcons.handHoldingDollar),
+  bonuses('Premie', FontAwesomeIcons.sackDollar),
+  gifts('Prezenty', FontAwesomeIcons.boxOpen),
+  dividends('Dywidendy', FontAwesomeIcons.coins),
+  royalties('Honoraria', FontAwesomeIcons.copyright),
+  refunds('Zwroty', FontAwesomeIcons.receipt),
+  other('Inne', FontAwesomeIcons.circleQuestion),
   rentAndMortgage(
       'Mieszkanie i czynsz', FontAwesomeIcons.houseCircleExclamation),
   utilities('Media', FontAwesomeIcons.lightbulb),
@@ -24,19 +38,18 @@ enum ExpenseCategory {
   pets('Zwierzęta domowe', FontAwesomeIcons.paw),
   repairsAndService('Naprawy i serwis', FontAwesomeIcons.screwdriverWrench),
   savingsAndInvestments(
-      'Oszczędności i inwestycje', FontAwesomeIcons.chartLine),
-  other('Inne', FontAwesomeIcons.circleQuestion);
+      'Oszczędności i inwestycje', FontAwesomeIcons.chartLine);
 
   final String label;
   final IconData icon;
 
-  const ExpenseCategory(this.label, this.icon);
+  const AllCategories(this.label, this.icon);
 
   static IconData returnIcon(String label) {
-    return ExpenseCategory.values
+    return AllCategories.values
         .firstWhere(
           (category) => category.label == label,
-          orElse: () => ExpenseCategory.other,
+          orElse: () => AllCategories.other,
         )
         .icon;
   }
