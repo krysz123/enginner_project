@@ -83,8 +83,9 @@ class MembersSharedAccountManageListWidget extends StatelessWidget {
                                     ),
                                   ),
                                   onTap: () => CustomDialog.customDialog(
-                                      title: 'Wyślij zaproszenie',
-                                      subtitle: 'Czy chcesz wysłać zaproszenie',
+                                      title: 'Usuń członka',
+                                      subtitle:
+                                          'Czy chcesz usunąć członka ${friend['FirstName']} ${friend['LastName']} z wspólnego rachunku?',
                                       widget: Row(
                                         children: [
                                           Expanded(

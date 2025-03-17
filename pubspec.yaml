@@ -12,7 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.6
   get: ^4.6.6
   flutter_native_splash: ^2.4.0
   liquid_swipe: ^3.1.0
@@ -25,18 +24,15 @@ dependencies:
   firebase_auth: ^5.1.2
   cloud_firestore: ^5.1.0
   lottie: ^3.1.2
-  skeletonizer: ^1.4.2
   uuid: ^4.5.0
-  flutter_animate: ^4.5.0
   barcode_scan2: ^4.3.3
   barcode_widget: ^2.0.4
-  cron: ^0.6.1
   percent_indicator: ^4.2.3
   fl_chart: ^0.69.0
-  intl: ^0.19.0
   workmanager: ^0.5.2
   font_awesome_flutter: ^10.7.0
   animations: ^2.0.11
+  intl_multiple_translations: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -58,5 +54,3 @@ flutter:
     - assets/images/onboarding/
     - assets/images/verify_email/
     - assets/images/succes/
-
-  # fonts:

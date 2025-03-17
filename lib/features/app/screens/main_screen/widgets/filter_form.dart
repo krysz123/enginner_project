@@ -8,15 +8,15 @@ import 'package:enginner_project/features/app/screens/main_screen/controllers/ma
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ExpenseFilterForm extends StatelessWidget {
-  const ExpenseFilterForm({super.key});
+  const ExpenseFilterForm({super.key, required this.controller});
+
+  final MainScreenController controller;
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(MainScreenController());
     return Obx(
       () => Form(
         key: controller.filterFormKey,

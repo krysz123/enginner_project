@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:enginner_project/enums/debts_types_enum.dart';
-import 'package:enginner_project/enums/expense_category_enum.dart';
 import 'package:enginner_project/enums/expense_type.dart';
 import 'package:enginner_project/enums/friend_status_enum.dart';
-import 'package:enginner_project/enums/payment_type_enum.dart';
-import 'package:enginner_project/features/app/screens/shared_accounts/widgets/shared_account_form.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
 import 'package:enginner_project/models/debt_model.dart';
 import 'package:enginner_project/models/expense_model.dart';
@@ -15,12 +12,7 @@ import 'package:enginner_project/models/saving_goal_model.dart';
 import 'package:enginner_project/models/shared_account_expense_model.dart';
 import 'package:enginner_project/models/shared_account_model.dart';
 import 'package:enginner_project/models/user_model.dart';
-import 'package:enginner_project/utils/exceptions/firebase_auth_exceptions.dart';
-import 'package:enginner_project/utils/exceptions/firebase_exceptions.dart';
-import 'package:enginner_project/utils/exceptions/format_exceptions.dart';
-import 'package:enginner_project/utils/exceptions/platform_exceptions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
+import 'package:enginner_project/utils/exceptions/handle_exceptions.dart';
 import 'package:get/get.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -28,19 +20,12 @@ class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
   Future<void> saveUserRecord(UserModel user) async {
     try {
       await _db.collection("Users").doc(user.id).set(user.toJson());
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -55,16 +40,8 @@ class UserRepository extends GetxController {
       } else {
         return UserModel.empty();
       }
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -76,60 +53,8 @@ class UserRepository extends GetxController {
           .collection("Transactions")
           .doc(model.id)
           .set(model.toJson());
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
-    }
-  }
-
-  Future<void> updateSingleField(Map<String, dynamic> json) async {
-    try {
-      _db
-          .collection("Users")
-          .doc(AuthenticationRepository.instance.authUser?.uid)
-          .update(json);
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
-    } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
-    }
-  }
-
-  Future<List<ExpenseModel>> fetchAllTransactions() async {
-    try {
-      final querySnapshot = await _db
-          .collection("Users")
-          .doc(AuthenticationRepository.instance.authUser?.uid)
-          .collection("Transactions")
-          .orderBy('Date', descending: true)
-          .get();
-
-      return querySnapshot.docs
-          .map((doc) => ExpenseModel.fromSnapshot(doc))
-          .toList();
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
-    } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -146,6 +71,17 @@ class UserRepository extends GetxController {
         return 0.0;
       }
     });
+  }
+
+  Future<void> updateSingleField(Map<String, dynamic> json) async {
+    try {
+      _db
+          .collection("Users")
+          .doc(AuthenticationRepository.instance.authUser?.uid)
+          .update(json);
+    } catch (e) {
+      throw handleExceptions(e);
+    }
   }
 
   Stream<List<ExpenseModel>> streamAllTransactions() {
@@ -200,16 +136,8 @@ class UserRepository extends GetxController {
 
       Map<String, dynamic> deletedValue = {'TotalBalance': balance};
       await updateSingleField(deletedValue);
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -221,16 +149,8 @@ class UserRepository extends GetxController {
           .collection("LoyaltyCards")
           .doc(model.id)
           .set(model.toJson());
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -253,16 +173,8 @@ class UserRepository extends GetxController {
           .collection("LoyaltyCards")
           .doc(loyaltyCardId)
           .delete();
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -274,16 +186,8 @@ class UserRepository extends GetxController {
           .collection("SavingGoals")
           .doc(model.id)
           .set(model.toJson());
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -301,16 +205,8 @@ class UserRepository extends GetxController {
         "Amount": amount,
         "Date": date,
       });
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -327,16 +223,8 @@ class UserRepository extends GetxController {
           .collection("Transactions")
           .doc(paymentId)
           .set(expenseModel.toJson());
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -382,16 +270,8 @@ class UserRepository extends GetxController {
           'CurrentAmount': FieldValue.increment(amount),
         },
       );
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -407,16 +287,8 @@ class UserRepository extends GetxController {
           'CurrentAmount': FieldValue.increment(-amount),
         },
       );
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -430,16 +302,8 @@ class UserRepository extends GetxController {
           'TotalBalance': FieldValue.increment(amount),
         },
       );
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -453,16 +317,8 @@ class UserRepository extends GetxController {
           'TotalBalance': FieldValue.increment(-amount),
         },
       );
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -475,16 +331,8 @@ class UserRepository extends GetxController {
           .collection('SavingGoals')
           .doc(documentId)
           .update(json);
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -522,16 +370,8 @@ class UserRepository extends GetxController {
           .limit(1)
           .get();
       return querySnapshot.docs.isNotEmpty;
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -556,16 +396,8 @@ class UserRepository extends GetxController {
       } else {
         return false;
       }
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -614,14 +446,6 @@ class UserRepository extends GetxController {
           'Status': FriendStatusEnum.sendInvite.label,
         });
       }
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw '$e';
     }
@@ -642,14 +466,6 @@ class UserRepository extends GetxController {
           .collection("Friends")
           .doc(AuthenticationRepository.instance.authUser?.uid)
           .delete();
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw '$e';
     }
@@ -670,14 +486,6 @@ class UserRepository extends GetxController {
           .collection("Friends")
           .doc(AuthenticationRepository.instance.authUser?.uid)
           .update(<String, dynamic>{"Status": FriendStatusEnum.accepted.label});
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw '$e';
     }
@@ -691,14 +499,6 @@ class UserRepository extends GetxController {
           .collection("Friends")
           .doc(friendId)
           .update(<String, dynamic>{"Status": FriendStatusEnum.rejected.label});
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw '$e';
     }
@@ -778,14 +578,6 @@ class UserRepository extends GetxController {
         'Status': false,
         'Timestamp': model.timestamp,
       });
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw '$e';
     }
@@ -829,32 +621,16 @@ class UserRepository extends GetxController {
           .update({
         "Status": true,
       });
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
   Future<void> storeNewSharedAccount(SharedAccountModel model) async {
     try {
       await _db.collection("SharedAccounts").doc(model.id).set(model.toJson());
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -864,17 +640,22 @@ class UserRepository extends GetxController {
           .collection("SharedAccounts")
           .doc(sharedAccountId)
           .update({'Members.$memberId': false});
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
+  }
+
+  Stream<int> streamNewDebtsCount(String friendId) {
+    return _db
+        .collection("Users")
+        .doc(AuthenticationRepository.instance.authUser?.uid)
+        .collection("Friends")
+        .doc(friendId)
+        .collection("Debts")
+        .where('Status', isEqualTo: false)
+        .where('Type', isEqualTo: DebtsTypesEnum.debts.label)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs.length);
   }
 
   Stream<int> streamSharedAccountInvitationsCount() {
@@ -906,14 +687,6 @@ class UserRepository extends GetxController {
           .collection("SharedAccounts")
           .doc(sharedAccountId)
           .update({'Members.$id': true});
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw '$e';
     }
@@ -926,14 +699,6 @@ class UserRepository extends GetxController {
           .collection("SharedAccounts")
           .doc(sharedAccountId)
           .update({'Members.$id': FieldValue.delete()});
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw '$e';
     }
@@ -959,16 +724,8 @@ class UserRepository extends GetxController {
           .collection("Transactions")
           .doc(model.id)
           .set(model.toJson());
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -985,16 +742,8 @@ class UserRepository extends GetxController {
       return querySnapshot.docs
           .map((doc) => SharedAccountExpenseModel.fromSnapshot(doc))
           .toList();
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -1041,16 +790,8 @@ class UserRepository extends GetxController {
       } else {
         decrementSharedAccountCurrentBalance(amount, sharedAccountId);
       }
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -1062,16 +803,8 @@ class UserRepository extends GetxController {
           'CurrentBalance': FieldValue.increment(amount),
         },
       );
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -1083,16 +816,8 @@ class UserRepository extends GetxController {
           'CurrentBalance': FieldValue.increment(-amount),
         },
       );
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
   }
 
@@ -1139,14 +864,6 @@ class UserRepository extends GetxController {
           throw 'Dokument nie istnieje';
         }
       }
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw 'Something went wrong. Please try again.';
     }
@@ -1191,14 +908,6 @@ class UserRepository extends GetxController {
           throw 'Błąd! Dokument nie istnieje.';
         }
       }
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
       throw 'Coś poszło nie tak. Spróbuj ponownie.';
     }
@@ -1240,16 +949,8 @@ class UserRepository extends GetxController {
       } else {
         throw 'Błąd! dokument nie istnieje.';
       }
-    } on FirebaseAuthException catch (e) {
-      throw CustomFirebaseAuthException(e.code).message;
-    } on FirebaseException catch (e) {
-      throw CustomFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CustomFormatException();
-    } on PlatformException catch (e) {
-      throw CustomPlatformException(e.code).message;
     } catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
+      throw handleExceptions(e);
     }
     return users;
   }

@@ -1,5 +1,3 @@
-import 'package:enginner_project/common/widgets/buttons/button.dart';
-import 'package:enginner_project/features/authentication/screens/email_verify/email_verify.dart';
 import 'package:enginner_project/features/authentication/screens/login/login.dart';
 import 'package:enginner_project/common/widgets/account_link_text.dart';
 import 'package:enginner_project/features/authentication/screens/signup/widgets/signup_form.dart';

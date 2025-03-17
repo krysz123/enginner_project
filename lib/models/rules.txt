@@ -1,0 +1,83 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+
+
+    match /Users/{userId} {
+
+
+      allow read: if request.auth != null;
+
+
+
+      allow write: if request.auth != null && request.auth.uid == userId;
+
+      match /Transactions/{transactionId} {
+        allow read, create, update, delete: if request.auth != null && request.auth.uid == userId;
+
+
+
+
+        allow create: if request.auth != null &&
+          request.auth.token.transaction_count < 1000 &&
+          request.time > request.time - duration.value(10, 's');
+
+
+
+          
+      }
+
+      match /LoyaltyCards/{loyaltyCardId} {
+        allow read, create, update, delete: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null &&
+          request.auth.token.loyalty_card_count < 500 &&
+          request.time > request.time - duration.value(10, 's');
+      }
+
+      match /SavingGoals/{savingGoalId} {
+        allow read, create, update, delete: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null &&
+          request.auth.token.saving_goal_count < 200 &&
+          request.time > request.time - duration.value(10, 's');
+
+        match /Payments/{paymentId} {
+          allow read, create, update, delete: if request.auth != null && request.auth.uid == userId;
+          allow create: if request.auth != null &&
+            request.auth.token.payment_count < 2000 &&
+            request.time > request.time - duration.value(10, 's');
+        }
+      }
+
+      match /Friends/{friendId} {
+        allow read, create, update, delete: if request.auth != null && (request.auth.uid == userId || request.auth.uid == friendId);
+        allow create: if request.auth != null &&
+          request.auth.token.friend_count < 500 &&
+          request.time > request.time - duration.value(10, 's');
+
+        match /Debts/{debtId} {
+          allow read, create, update, delete: if request.auth != null && (request.auth.uid == userId || request.auth.uid == friendId);
+          allow create: if request.auth != null &&
+            request.auth.token.debt_count < 500 &&
+            request.time > request.time - duration.value(10, 's');
+        }
+      }
+    }
+
+    match /SharedAccounts/{sharedAccountId} {
+      allow read, update: if request.auth != null && request.auth.uid in resource.data.Members;
+      allow create: if request.auth != null &&
+        request.auth.token.shared_account_count < 100 &&
+        request.time > request.time - duration.value(10, 's');
+      allow delete: if request.auth != null && resource.data.creator == request.auth.uid;
+
+      match /Transactions/{transactionId} {
+        allow read, create, update, delete: if request.auth != null;
+        allow create: if request.auth != null &&
+          request.auth.token.shared_transaction_count < 5000 &&
+          request.time > request.time - duration.value(10, 's');
+      }
+    }
+  }
+}

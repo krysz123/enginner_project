@@ -16,6 +16,7 @@ class FriendsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appBarHeight = DeviceUtility.getAppBarHeight();
     final controller = Get.put(FriendsController());
+    controller.currentPage.value = 0;
     return Stack(
       children: [
         Align(

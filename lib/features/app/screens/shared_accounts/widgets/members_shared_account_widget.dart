@@ -1,13 +1,8 @@
-import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
-import 'package:enginner_project/features/app/screens/shared_accounts/controllers/shared_account_manage_controller.dart';
 import 'package:enginner_project/models/shared_account_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
-import 'package:enginner_project/utils/popups/custom_dialog.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 
 class MembersSharedAccountWidget extends StatelessWidget {
   const MembersSharedAccountWidget({

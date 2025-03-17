@@ -35,6 +35,7 @@ class AddSavingAmountForm extends StatelessWidget {
             CustomTextField(
               controller: controller.amount,
               hintText: 'Kwota',
+              keyboardType: TextInputType.number,
               validator: (value) => Validator.validateNumbersOnly(value),
             ),
             Padding(

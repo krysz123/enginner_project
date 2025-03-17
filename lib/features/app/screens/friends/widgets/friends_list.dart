@@ -2,18 +2,17 @@ import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/features/app/screens/friends/controllers/friends_controller.dart';
 import 'package:enginner_project/features/app/screens/friends/widgets/debt_screen.dart';
+import 'package:enginner_project/features/app/screens/navigation/widgets/invitation_info.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
+import 'package:enginner_project/utils/popups/custom_tooltip.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class FriendsList extends StatelessWidget {
-  const FriendsList({
-    super.key,
-    required this.controller,
-  });
+  const FriendsList({super.key, required this.controller});
 
   final FriendsController controller;
 
@@ -153,29 +152,53 @@ class FriendsList extends StatelessWidget {
                             vertical: 20, horizontal: 20),
                         child: Row(
                           children: [
+                            // Nazwa użytkownika + Tooltip
                             Expanded(
-                              child: Text(
-                                friend.fullname,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextAppTheme.textTheme.titleMedium,
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      friend.fullname,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextAppTheme.textTheme.titleMedium,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                      width:
+                                          8), // Odstęp między nazwą a Tooltipem
+                                  ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      minWidth: 0,
+                                      maxWidth: 30,
+                                      maxHeight: 30,
+                                    ),
+                                    child: CustomTooltip(
+                                      message: 'Masz nowy dług',
+                                      child: InfoWidget(
+                                        stream: UserRepository.instance
+                                            .streamNewDebtsCount(friend.id),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
+
+                            // Ikona długu
                             GestureDetector(
-                              onTap: () => Get.to(
-                                () => DebtScreen(friend: friend),
-                              ),
+                              onTap: () =>
+                                  Get.to(() => DebtScreen(friend: friend)),
                               child: Container(
                                 width: 40,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    gradient: const LinearGradient(colors: [
-                                      AppColors.greenColorGradient,
-                                      AppColors.blueButton
-                                    ])),
-                                child: const Icon(
-                                  Icons.attach_money_rounded,
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: const LinearGradient(colors: [
+                                    AppColors.greenColorGradient,
+                                    AppColors.blueButton,
+                                  ]),
                                 ),
+                                child: const Icon(Icons.attach_money_rounded),
                               ),
                             ),
                           ],

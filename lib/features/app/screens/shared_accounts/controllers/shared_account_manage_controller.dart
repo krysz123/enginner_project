@@ -1,5 +1,4 @@
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
-import 'package:enginner_project/utils/device/network_connection.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +26,8 @@ class SharedAccountManageController extends GetxController {
   void removeUserFromSharedAccount(
       String sharedAccountId, String memberId) async {
     try {
-      UserRepository.instance.inviteToSharedAccount(sharedAccountId, memberId);
+      UserRepository.instance
+          .rejectInviteToSharedAccount(memberId, sharedAccountId);
       Get.back();
       Snackbars.infoSnackbar(
           title: 'Udało się!', message: 'Użytkownik został usunięty');

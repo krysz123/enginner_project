@@ -66,7 +66,7 @@ class Validator {
     final numbersOnlyRegExp = RegExp(r'^\d+(\.\d{1,2})?$');
 
     if (!numbersOnlyRegExp.hasMatch(value)) {
-      return 'Wartość może zawierać tylko liczby całkowite lub zmiennoprzecinkowe z maksymalnie dwoma miejscami po przecinku';
+      return 'Wartość może zawierać tylko liczby z maksymalnie dwoma miejscami po przecinku';
     }
 
     final doubleValue = double.tryParse(value);

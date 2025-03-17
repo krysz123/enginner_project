@@ -17,7 +17,7 @@ class ChartsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ChartsController());
     final charts = ListCharts().chartList;
-    controller.currentPage.value = 1;
+    controller.currentPage.value = 0;
     return Stack(
       children: [
         Obx(

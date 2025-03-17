@@ -21,7 +21,9 @@ class LoginController extends GetxController {
   void signIn() async {
     try {
       Get.to(() => const FullScreenLoader());
+
       if (!loginFormKey.currentState!.validate()) {
+        FullScreenLoader.stopLoading();
         return;
       }
 

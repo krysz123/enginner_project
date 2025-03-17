@@ -3,7 +3,6 @@ import 'package:enginner_project/enums/friend_status_enum.dart';
 import 'package:enginner_project/features/app/screens/friends/controllers/friends_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
-import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';

@@ -18,7 +18,7 @@ class SharedAccountsList extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Lista kont wspólnych',
+            'Lista rachunków wspólnych',
             style: TextAppTheme.textTheme.headlineSmall,
           ),
           const SizedBox(height: 20),

@@ -68,42 +68,22 @@ class ExpensesSummaryChart extends StatelessWidget {
           mark: 'PLN',
           percent: maxFilteredValue / maxValue,
         ),
-        CommonStatsWithPercentWidget(
+        CommonStatsWidget(
           filteredValues: minFilteredValue,
           allValues: minValue,
           title: 'Minimalna wartość transakcji',
           mark: 'PLN',
-          percent: minFilteredValue / minValue,
+          value: minFilteredValue.toString(),
         ),
         CommonStatsWidget(
           filteredValues: numberOfFilteredValues,
           allValues: numberOfValues,
           title: 'Średnia wartość transakcji',
           mark: 'PLN',
-          value:
-              (sumFilteredValues / numberOfFilteredValues).toStringAsFixed(2),
+          value: numberOfFilteredValues != 0
+              ? (sumFilteredValues / numberOfFilteredValues).toStringAsFixed(2)
+              : '0.00',
         ),
-        // CommonStatsWidget(
-        //   filteredValues: sumFilteredValues,
-        //   allValues: sumAllValues,
-        //   title: 'Średnia wartość transakcji',
-        //   mark: 'PLN',
-        //   value: sumFilteredValues / numberOfFilteredValues,
-        // ),
-        // CommonStatsWidget(
-        //   filteredValues: sumFilteredValues,
-        //   allValues: sumAllValues,
-        //   title: 'Maksymalna wartość transakcji',
-        //   mark: 'PLN',
-        //   value: maxValue,
-        // ),
-        // CommonStatsWidget(
-        //   filteredValues: sumFilteredValues,
-        //   allValues: sumAllValues,
-        //   title: 'Minimalna wartość transakcji',
-        //   mark: 'PLN',
-        //   value: minValue,
-        // ),
       ],
     );
   }

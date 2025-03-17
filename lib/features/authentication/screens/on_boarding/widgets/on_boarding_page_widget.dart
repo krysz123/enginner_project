@@ -8,7 +8,6 @@ import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({

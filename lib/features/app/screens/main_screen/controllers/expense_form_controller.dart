@@ -87,20 +87,15 @@ class ExpenseFormController extends GetxController {
         paymentType: selectedPaymentType.trim(),
       );
       await userRepository.saveExpenseRecord(newExpense);
-      final balance = userController.totalBalance.value - parsedAmount;
 
-      userController.user.update((user) {
-        user!.totalBalance -= parsedAmount;
-      });
-
-      Map<String, dynamic> expense = {'TotalBalance': balance};
-      await userRepository.updateSingleField(expense);
+      await userRepository.decrementCurrentBalance(parsedAmount);
 
       if (isChecked.value) {
         Workmanager().registerPeriodicTask(
           transactionId,
           transactionId,
-          frequency: const Duration(minutes: 15),
+          frequency: const Duration(days: 31),
+          initialDelay: const Duration(days: 31),
           inputData: {
             'Title': title.text,
             'Amount': parsedAmount,
@@ -129,14 +124,10 @@ class ExpenseFormController extends GetxController {
       if (!incomeFormKey.currentState!.validate()) {
         return;
       }
-
       Get.to(() => const FullScreenLoader());
 
       final parsedAmount = double.parse(amount.text.trim());
-
-      if (isChecked.value) {
-        type = ExpenseTypeEnum.periodicIncome.label;
-      }
+      type = isChecked.value ? ExpenseTypeEnum.periodicIncome.label : type;
 
       final newIncome = ExpenseModel(
         id: transactionId,
@@ -150,22 +141,14 @@ class ExpenseFormController extends GetxController {
       );
 
       await userRepository.saveExpenseRecord(newIncome);
-      final balance = userController.totalBalance.value + parsedAmount;
-
-      userController.user.update(
-        (user) {
-          user!.totalBalance += parsedAmount;
-        },
-      );
-
-      Map<String, dynamic> income = {'TotalBalance': balance};
-      await userRepository.updateSingleField(income);
+      await userRepository.incrementCurrentBalance(parsedAmount);
 
       if (isChecked.value) {
         Workmanager().registerPeriodicTask(
           transactionId,
           transactionId,
-          frequency: const Duration(minutes: 15),
+          frequency: const Duration(days: 31),
+          initialDelay: const Duration(days: 31),
           inputData: {
             'Title': title.text,
             'Amount': parsedAmount,
@@ -176,9 +159,7 @@ class ExpenseFormController extends GetxController {
           },
         );
       }
-
       FullScreenLoader.stopLoading();
-
       Get.back();
     } catch (e) {
       FullScreenLoader.stopLoading();

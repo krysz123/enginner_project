@@ -1,15 +1,12 @@
-import 'package:enginner_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/enums/expense_type.dart';
 import 'package:enginner_project/features/personalization/controllers/user_controller.dart';
-import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/models/shared_account_expense_model.dart';
 import 'package:enginner_project/utils/popups/full_screen_loader.dart';
 import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
-import 'package:workmanager/workmanager.dart';
 
 class SharedAccountTransactionFormController extends GetxController {
   static SharedAccountTransactionFormController get instance => Get.find();

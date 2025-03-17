@@ -145,14 +145,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  cron:
-    dependency: "direct main"
-    description:
-      name: cron
-      sha256: e1b379dec3d7967c8e521a92832a6ac97a11ea4046cbc3e584193a470e3ad8f5
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.1"
   crypto:
     dependency: transitive
     description:
@@ -169,14 +161,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   dbus:
     dependency: transitive
     description:
@@ -286,14 +270,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_animate:
-    dependency: "direct main"
-    description:
-      name: flutter_animate
-      sha256: "7c8a6594a9252dad30cc2ef16e33270b6248c4dedc3b3d06c86c4f3f4dc05ae5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -310,14 +286,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  flutter_shaders:
-    dependency: transitive
-    description:
-      name: flutter_shaders
-      sha256: "02750b545c01ff4d8e9bbe8f27a7731aa3778402506c67daa1de7f5fc3f4befe"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -393,13 +361,21 @@ packages:
     source: hosted
     version: "4.2.0"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
-      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.0"
+    version: "0.20.2"
+  intl_multiple_translations:
+    dependency: "direct main"
+    description:
+      name: intl_multiple_translations
+      sha256: "37a9eb0f0d9205fe6413794a46f3bf054c591458deba25289ca9e646b6c531ad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   leak_tracker:
     dependency: transitive
     description:
@@ -656,14 +632,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  skeletonizer:
-    dependency: "direct main"
-    description:
-      name: skeletonizer
-      sha256: "3b202e4fa9c49b017d368fb0e570d4952bcd19972b67b2face071bdd68abbfae"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.2"
   sky_engine:
     dependency: transitive
     description: flutter

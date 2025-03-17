@@ -25,6 +25,8 @@ class MainScreenController extends GetxController {
   Rx<String> selectedExpenseCategory = ''.obs;
   Rx<String> selectedIncomeCategroy = ''.obs;
 
+  void deleteExpense() {}
+
   @override
   void onInit() {
     super.onInit();

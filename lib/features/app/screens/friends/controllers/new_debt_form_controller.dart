@@ -42,7 +42,7 @@ class NewDebtFormController extends GetxController {
           status: false,
           timestamp: Timestamp.now());
 
-      await userRepository.saveNewDebt(friendId, savingNewDebt);
+      userRepository.saveNewDebt(friendId, savingNewDebt);
 
       FullScreenLoader.stopLoading();
       Get.back();

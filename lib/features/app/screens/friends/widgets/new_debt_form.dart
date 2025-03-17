@@ -1,8 +1,6 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/app/screens/friends/controllers/new_debt_form_controller.dart';
-import 'package:enginner_project/features/app/screens/saving_goals/controllers/saving_goal_controller.dart';
-import 'package:enginner_project/models/friend_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:flutter/material.dart';

@@ -17,8 +17,6 @@ class SignupController extends GetxController {
     isShowPasswordEnable.value = !isShowPasswordEnable.value;
   }
 
-  // -- SIGNUP
-
   final email = TextEditingController();
   final lastName = TextEditingController();
   final firstName = TextEditingController();
@@ -29,23 +27,20 @@ class SignupController extends GetxController {
   void signup() async {
     try {
       Get.to(() => const FullScreenLoader());
-      //VALIDATION
+
       if (!signupFormKey.currentState!.validate()) {
+        FullScreenLoader.stopLoading();
         return;
       }
-      //INTERNET
+
       final isConnected = await NetworkConnection.instance.isConnected();
       if (!isConnected) {
         throw 'Brak połączenia z internetem';
       }
 
-      // START LOADING
-
-      //REGISTER IN FIREBASE
       final userCredentials = await AuthenticationRepository.instance
           .register(email.text.trim(), password.text.trim());
 
-      //SAVE USER IN FIRESOTRE
       final newUser = UserModel(
         id: userCredentials.user!.uid,
         email: email.text.trim(),
@@ -58,10 +53,8 @@ class SignupController extends GetxController {
       final userRepository = Get.put(UserRepository());
       await userRepository.saveUserRecord(newUser);
 
-      //REMOVE LOADER
       FullScreenLoader.stopLoading();
 
-      //MOVE TO VERIFY EMAIL
       Get.offAll(() => EmailVerificationScreen(email: email.text.trim()));
     } catch (e) {
       FullScreenLoader.stopLoading();

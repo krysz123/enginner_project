@@ -1,57 +1,3 @@
-// import 'package:enginner_project/utils/constants/colors.dart';
-// import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
-
-// class TextAppTheme {
-//   TextAppTheme._();
-//   static TextTheme textTheme = TextTheme(
-//     labelLarge: GoogleFonts.poppins(
-//       color: AppColors.textPrimaryColor,
-//     ),
-
-//     // BIG LABELS
-
-//     headlineLarge: const TextStyle().copyWith(
-//         fontSize: 35.0,
-//         fontWeight: FontWeight.bold,
-//         color: AppColors.textPrimaryColor),
-//     headlineMedium: const TextStyle().copyWith(
-//         fontSize: 25.0,
-//         fontWeight: FontWeight.w600,
-//         color: AppColors.textPrimaryColor),
-//     headlineSmall: const TextStyle().copyWith(
-//         fontSize: 20.0,
-//         fontWeight: FontWeight.bold,
-//         color: AppColors.textPrimaryColor),
-
-//     // SMALL LABELS
-
-//     titleLarge: const TextStyle().copyWith(
-//         fontSize: 15.0,
-//         fontWeight: FontWeight.bold,
-//         color: AppColors.textPrimaryColor),
-//     titleMedium: const TextStyle().copyWith(
-//         fontSize: 15.0,
-//         fontWeight: FontWeight.w500,
-//         color: AppColors.textPrimaryColor),
-//     titleSmall: const TextStyle().copyWith(
-//         fontSize: 13.0,
-//         fontWeight: FontWeight.w400,
-//         color: AppColors.textPrimaryColor),
-
-//     // SMALL SUBTITLES
-
-//     bodyLarge: const TextStyle().copyWith(
-//         fontSize: 13.0,
-//         fontWeight: FontWeight.w400,
-//         color: AppColors.textSecondaryColor),
-//     bodyMedium: const TextStyle().copyWith(
-//         fontSize: 15.0,
-//         fontWeight: FontWeight.w400,
-//         color: AppColors.textSecondaryColor),
-//   );
-// }
-
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,6 +10,9 @@ class TextAppTheme {
           fontSize: 57.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.2,
+          letterSpacing: 0.5,
         ),
       ),
       displayMedium: GoogleFonts.poppins(
@@ -71,6 +20,9 @@ class TextAppTheme {
           fontSize: 45.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.3,
+          letterSpacing: 0.5,
         ),
       ),
       displaySmall: GoogleFonts.poppins(
@@ -78,6 +30,9 @@ class TextAppTheme {
           fontSize: 36.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.4,
+          letterSpacing: 0.4,
         ),
       ),
       headlineLarge: GoogleFonts.poppins(
@@ -85,6 +40,9 @@ class TextAppTheme {
           fontSize: 32.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.4,
+          letterSpacing: 0.4,
         ),
       ),
       headlineMedium: GoogleFonts.archivoBlack(
@@ -92,6 +50,9 @@ class TextAppTheme {
           fontSize: 28.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.5,
+          letterSpacing: 0.3,
         ),
       ),
       headlineSmall: GoogleFonts.poppins(
@@ -99,6 +60,9 @@ class TextAppTheme {
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.5,
+          letterSpacing: 0.3,
         ),
       ),
       titleLarge: GoogleFonts.poppins(
@@ -106,6 +70,9 @@ class TextAppTheme {
           fontSize: 22.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.5,
+          letterSpacing: 0.3,
         ),
       ),
       titleMedium: GoogleFonts.poppins(
@@ -113,6 +80,9 @@ class TextAppTheme {
           fontSize: 16.0,
           fontWeight: FontWeight.bold,
           color: Colors.white,
+          overflow: TextOverflow.ellipsis,
+          height: 1.6,
+          letterSpacing: 0.2,
         ),
       ),
       titleSmall: GoogleFonts.poppins(
@@ -120,6 +90,9 @@ class TextAppTheme {
           fontSize: 14.0,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.6,
+          letterSpacing: 0.2,
         ),
       ),
       bodyLarge: GoogleFonts.poppins(
@@ -127,6 +100,9 @@ class TextAppTheme {
           fontSize: 16.0,
           fontWeight: FontWeight.normal,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.fade,
+          height: 1.7,
+          letterSpacing: 0.2,
         ),
       ),
       bodyMedium: GoogleFonts.poppins(
@@ -134,6 +110,9 @@ class TextAppTheme {
           fontSize: 14.0,
           fontWeight: FontWeight.w300,
           color: AppColors.textPrimaryColor,
+          overflow: TextOverflow.fade,
+          height: 1.7,
+          letterSpacing: 0.1,
         ),
       ),
       bodySmall: GoogleFonts.poppins(
@@ -141,6 +120,9 @@ class TextAppTheme {
           fontSize: 12.0,
           fontWeight: FontWeight.normal,
           color: AppColors.textSecondaryColor,
+          overflow: TextOverflow.ellipsis,
+          height: 1.8,
+          letterSpacing: 0.1,
         ),
       ),
     );

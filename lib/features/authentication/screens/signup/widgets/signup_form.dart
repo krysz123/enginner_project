@@ -1,11 +1,8 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/features/authentication/controllers/signup/signup_controller.dart';
-import 'package:enginner_project/features/authentication/screens/email_verify/email_verify.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
-import 'package:enginner_project/utils/popups/full_screen_loader.dart';
-import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

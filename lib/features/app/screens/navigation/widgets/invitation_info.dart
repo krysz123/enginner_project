@@ -1,16 +1,15 @@
 import 'package:enginner_project/utils/constants/colors.dart';
-import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 
-class InvitationInfo extends StatelessWidget {
-  final Stream<int> friendsCountStream;
+class InfoWidget extends StatelessWidget {
+  final Stream<int> stream;
 
-  const InvitationInfo({super.key, required this.friendsCountStream});
+  const InfoWidget({super.key, required this.stream});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int>(
-      stream: friendsCountStream,
+      stream: stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -27,9 +26,7 @@ class InvitationInfo extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
-            child: Text(
-              '${snapshot.data!}',
-            ),
+            child: Text('${snapshot.data!}'),
           );
         }
       },

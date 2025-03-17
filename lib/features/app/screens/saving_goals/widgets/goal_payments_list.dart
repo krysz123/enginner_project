@@ -1,12 +1,8 @@
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
-import 'package:enginner_project/features/app/screens/saving_goals/widgets/add_saving_amount_form.dart';
 import 'package:enginner_project/models/saving_goal_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
-import 'package:enginner_project/utils/popups/custom_dialog.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class GoalPaymentsList extends StatelessWidget {
   const GoalPaymentsList({super.key, required this.savingGoal});

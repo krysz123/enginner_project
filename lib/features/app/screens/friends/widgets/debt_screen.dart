@@ -1,16 +1,12 @@
-import 'package:enginner_project/app.dart';
 import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/data/repositories/user/user_repository.dart';
 import 'package:enginner_project/enums/debts_types_enum.dart';
-import 'package:enginner_project/enums/friend_status_enum.dart';
 import 'package:enginner_project/features/app/screens/friends/controllers/debt_screen_controller.dart';
 import 'package:enginner_project/features/app/screens/friends/widgets/debt_card_widget.dart';
 import 'package:enginner_project/features/app/screens/friends/widgets/new_debt_form.dart';
-import 'package:enginner_project/models/debt_model.dart';
 import 'package:enginner_project/models/friend_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/popups/custom_dialog.dart';
-import 'package:enginner_project/utils/popups/snackbars.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,7 +52,6 @@ class DebtScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Obx(
@@ -134,9 +129,7 @@ class DebtScreen extends StatelessWidget {
                                       redirection: () {
                                         UserRepository.instance
                                             .setDebtAsReturned(
-                                          friend.id,
-                                          debt.id,
-                                        );
+                                                friend.id, debt.id);
                                         Get.back();
                                       },
                                       colorGradient1:

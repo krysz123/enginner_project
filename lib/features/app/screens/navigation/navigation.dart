@@ -81,7 +81,7 @@ class NavigationScreen extends StatelessWidget {
             ),
             NavigationDrawerDestination(
               icon: const FaIcon(
-                FontAwesomeIcons.userGroup,
+                FontAwesomeIcons.addressBook,
                 color: AppColors.textSecondaryColor,
                 size: 30,
               ),
@@ -103,8 +103,8 @@ class NavigationScreen extends StatelessWidget {
                     ),
                     child: CustomTooltip(
                       message: 'Masz nowe zaproszenia do grona znajomych',
-                      child: InvitationInfo(
-                        friendsCountStream: UserRepository.instance
+                      child: InfoWidget(
+                        stream: UserRepository.instance
                             .streamFriendsInvitationsCount(),
                       ),
                     ),
@@ -136,8 +136,8 @@ class NavigationScreen extends StatelessWidget {
                     ),
                     child: CustomTooltip(
                       message: 'Masz nowe zaproszenia do konta wspólnego',
-                      child: InvitationInfo(
-                        friendsCountStream: UserRepository.instance
+                      child: InfoWidget(
+                        stream: UserRepository.instance
                             .streamSharedAccountInvitationsCount(),
                       ),
                     ),

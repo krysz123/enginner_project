@@ -1,5 +1,4 @@
 import 'package:enginner_project/common/widgets/buttons/button.dart';
-import 'package:enginner_project/models/expense_model.dart';
 import 'package:enginner_project/models/shared_account_expense_model.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';

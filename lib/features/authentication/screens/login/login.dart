@@ -1,16 +1,11 @@
 import 'package:enginner_project/common/widgets/account_link_text.dart';
-import 'package:enginner_project/common/widgets/buttons/button.dart';
-import 'package:enginner_project/common/widgets/text_field/text_field.dart';
-import 'package:enginner_project/features/authentication/controllers/login/login_controller.dart';
 import 'package:enginner_project/features/authentication/screens/login/widgets/login_form.dart';
 import 'package:enginner_project/features/authentication/screens/signup/signup.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/sizes.dart';
-import 'package:enginner_project/utils/constants/validation.dart';
 import 'package:enginner_project/utils/device/device_utility.dart';
 import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {

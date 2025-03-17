@@ -2,11 +2,9 @@ import 'package:enginner_project/common/widgets/buttons/button.dart';
 import 'package:enginner_project/common/widgets/text_field/text_field.dart';
 import 'package:enginner_project/enums/expense_category_enum.dart';
 import 'package:enginner_project/enums/payment_type_enum.dart';
-import 'package:enginner_project/features/app/screens/main_screen/controllers/expense_form_controller.dart';
 import 'package:enginner_project/features/app/screens/shared_accounts/controllers/shared_account_transaction_form_controller.dart';
 import 'package:enginner_project/utils/constants/colors.dart';
 import 'package:enginner_project/utils/constants/validation.dart';
-import 'package:enginner_project/utils/theme/widget_themes/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

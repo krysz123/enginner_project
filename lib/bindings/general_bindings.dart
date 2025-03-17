@@ -5,6 +5,5 @@ class GeneralBindings extends Bindings {
   @override
   void dependencies() {
     Get.put(NetworkConnection());
-    // Get.put(SideBarController());
   }
 }
