@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 class EmailVerifyController extends GetxController {
   static EmailVerifyController get instance => Get.find();
 
-  Timer? _verificationTimer; // Referencja do timera
+  Timer? _verificationTimer;
 
   @override
   void onInit() {
@@ -20,7 +20,7 @@ class EmailVerifyController extends GetxController {
 
   @override
   void onClose() {
-    cancelRedirectTimer(); // Anulowanie timera przy usuwaniu kontrolera
+    cancelRedirectTimer();
     super.onClose();
   }
 

@@ -36,7 +36,10 @@ class AddSavingAmountForm extends StatelessWidget {
               controller: controller.amount,
               hintText: 'Kwota',
               keyboardType: TextInputType.number,
-              validator: (value) => Validator.validateNumbersOnly(value),
+              validator: savingGoal.currentAmount == savingGoal.goal
+                  ? (value) => Validator.isReadOnlyTextField()
+                  : (value) => Validator.validateNumbersOnly(value),
+              isReadOnly: savingGoal.currentAmount == savingGoal.goal,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),

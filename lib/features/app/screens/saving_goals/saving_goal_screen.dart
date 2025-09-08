@@ -21,19 +21,13 @@ class SavingGoalsScreen extends StatelessWidget {
 
     double displayPercent(double current, double goal) {
       double value = current / goal * 100.0;
-
       double truncatedValue = (value * 100).toInt() / 100.0;
-
       return truncatedValue;
     }
 
     double countPercent(double current, double goal) {
       double value = current / goal;
-      if (value <= 1.0) {
-        return value;
-      } else {
-        return 1.0;
-      }
+      return value <= 1.0 ? value : 1.0;
     }
 
     return Stack(
@@ -49,10 +43,7 @@ class SavingGoalsScreen extends StatelessWidget {
                 widget: const SavingGoalForm(),
                 icon: Icons.attach_money_outlined,
               ),
-              icon: const Icon(
-                Icons.add,
-                size: 30,
-              ),
+              icon: const Icon(Icons.add, size: 30),
             ),
           ),
         ),
@@ -66,28 +57,21 @@ class SavingGoalsScreen extends StatelessWidget {
                     stream: UserRepository.instance.streamAllSavingGoals(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Błąd: ${snapshot.error}'),
-                        );
+                        return Center(child: Text('Błąd: ${snapshot.error}'));
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return const Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.attach_money_outlined,
-                                color: AppColors.textSecondaryColor,
-                                size: 50,
-                              ),
+                              Icon(Icons.attach_money_outlined,
+                                  color: AppColors.textSecondaryColor,
+                                  size: 50),
                               SizedBox(height: 20),
                               Text(
-                                'Nie masz jeszcze żadnych celów oszczędnościowych',
-                                textAlign: TextAlign.center,
-                              )
+                                  'Nie masz jeszcze żadnych celów oszczędnościowych',
+                                  textAlign: TextAlign.center)
                             ],
                           ),
                         );
@@ -103,15 +87,15 @@ class SavingGoalsScreen extends StatelessWidget {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: GestureDetector(
-                              onTap: (() => Get.to(() =>
-                                  GoalPaymentsList(savingGoal: savingGoal))),
+                              onTap: () => Get.to(() =>
+                                  GoalPaymentsList(savingGoal: savingGoal)),
                               onLongPress: () => CustomDialog.customDialog(
-                                  title: 'Dodaj kwote',
-                                  subtitle: 'Podaj zaoszczędzoną kwotę',
-                                  widget: AddSavingAmountForm(
-                                    savingGoal: savingGoal,
-                                  ),
-                                  icon: Icons.add),
+                                title: 'Dodaj kwotę',
+                                subtitle: 'Podaj zaoszczędzoną kwotę',
+                                widget:
+                                    AddSavingAmountForm(savingGoal: savingGoal),
+                                icon: Icons.add,
+                              ),
                               child: Card(
                                 color: AppColors.secondary,
                                 shape: savingGoal.currentAmount ==
@@ -132,12 +116,9 @@ class SavingGoalsScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        savingGoal.title,
-                                        style: TextAppTheme
-                                            .textTheme.headlineSmall,
-                                        textAlign: TextAlign.end,
-                                      ),
+                                      Text(savingGoal.title,
+                                          style: TextAppTheme
+                                              .textTheme.headlineSmall),
                                       Text(savingGoal.description),
                                       const SizedBox(height: 10),
                                       Row(
@@ -146,21 +127,16 @@ class SavingGoalsScreen extends StatelessWidget {
                                             message:
                                                 'Aktualnie zaoszczędzona kwota',
                                             child: Text(
-                                              savingGoal.currentAmount
-                                                  .toString(),
-                                              style: TextAppTheme
-                                                  .textTheme.titleMedium,
-                                            ),
+                                                '${savingGoal.currentAmount}',
+                                                style: TextAppTheme
+                                                    .textTheme.titleMedium),
                                           ),
                                           const Spacer(),
                                           CustomTooltip(
                                             message: 'Cel oszczędnościowy',
-                                            child: Text(
-                                              savingGoal.currentAmount
-                                                  .toString(),
-                                              style: TextAppTheme
-                                                  .textTheme.titleMedium,
-                                            ),
+                                            child: Text('${savingGoal.goal}',
+                                                style: TextAppTheme
+                                                    .textTheme.titleMedium),
                                           ),
                                         ],
                                       ),
@@ -176,7 +152,7 @@ class SavingGoalsScreen extends StatelessWidget {
                                               savingGoal.currentAmount,
                                               savingGoal.goal),
                                           center: Text(
-                                            '${displayPercent(savingGoal.currentAmount, savingGoal.goal)} %',
+                                            '${displayPercent(savingGoal.currentAmount, savingGoal.goal)}%',
                                             style: TextAppTheme
                                                 .textTheme.titleMedium,
                                           ),
@@ -190,26 +166,23 @@ class SavingGoalsScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      savingGoal.currentAmount ==
-                                              savingGoal.goal
-                                          ? Align(
-                                              alignment: Alignment.center,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 10),
-                                                child: Text(
-                                                  'zakończony!'.toUpperCase(),
-                                                  style: TextAppTheme
-                                                      .textTheme.titleMedium!
-                                                      .copyWith(
-                                                    color: AppColors
-                                                        .greenColorGradient,
-                                                  ),
-                                                ),
+                                      if (savingGoal.currentAmount ==
+                                          savingGoal.goal)
+                                        Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            child: Text(
+                                              'ZAKOŃCZONY!',
+                                              style: TextAppTheme
+                                                  .textTheme.titleMedium!
+                                                  .copyWith(
+                                                color: AppColors
+                                                    .greenColorGradient,
                                               ),
-                                            )
-                                          : const SizedBox(),
+                                            ),
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),

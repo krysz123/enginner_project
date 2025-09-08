@@ -78,6 +78,9 @@ class Validator {
     if (doubleValue > 1000000000) {
       return 'Wartość nie może przekroczyć 1 000 000 000';
     }
+    if (doubleValue == 0) {
+      return "Wartość musi być różna od zera";
+    }
 
     return null;
   }
@@ -93,6 +96,17 @@ class Validator {
       return 'Wartość może zawierać tylko liczby całkowite lub zmiennoprzecinkowe';
     }
 
+    final normalizedValue = value.replaceAll(',', '.');
+
+    final number = double.tryParse(normalizedValue);
+    if (number == null) {
+      return 'Nieprawidłowy format liczby';
+    }
+
+    if (number == 0) {
+      return 'Wartość musi być różna od zera';
+    }
+
     return null;
   }
 
@@ -105,4 +119,6 @@ class Validator {
 
     return null;
   }
+
+  static String? isReadOnlyTextField() => 'Wprowadzono już maksymalną kwotę';
 }

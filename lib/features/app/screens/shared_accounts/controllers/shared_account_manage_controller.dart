@@ -35,4 +35,18 @@ class SharedAccountManageController extends GetxController {
       Snackbars.errorSnackbar(title: 'Błąd!', message: e.toString());
     }
   }
+
+  void deleteSharedAccount(String sharedAccountId) async {
+    try {
+      UserRepository.instance.deleteSharedAccount(sharedAccountId);
+      Get.back();
+      Get.back();
+      Get.back();
+      Get.back();
+      Snackbars.infoSnackbar(
+          title: 'Potwierdzenie', message: 'Konto wspólne zostało usunięte');
+    } catch (e) {
+      Snackbars.errorSnackbar(title: 'Błąd!', message: e.toString());
+    }
+  }
 }

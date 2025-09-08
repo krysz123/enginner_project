@@ -954,4 +954,14 @@ class UserRepository extends GetxController {
     }
     return users;
   }
+
+  Future<void> deleteSharedAccount(
+    String sharedAccountId,
+  ) async {
+    try {
+      _db.collection("SharedAccounts").doc(sharedAccountId).delete();
+    } catch (e) {
+      throw handleExceptions(e);
+    }
+  }
 }

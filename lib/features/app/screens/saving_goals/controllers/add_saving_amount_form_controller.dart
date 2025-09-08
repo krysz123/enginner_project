@@ -14,15 +14,21 @@ class AddSavingAmountFormController extends GetxController {
   static AddSavingAmountFormController get instance => Get.find();
 
   var amount = TextEditingController();
-
+  var isProcessing = false.obs;
   GlobalKey<FormState> savingAmountFormKey = GlobalKey<FormState>();
   final userRepository = UserRepository.instance;
 
-  updateSavingGoalProgress(SavingGoalModel savingGoal) {
+  Future<void> updateSavingGoalProgress(SavingGoalModel savingGoal) async {
+    if (isProcessing.value) return;
+
+    isProcessing.value = true;
+
     var uuid = const Uuid();
     String savingGoalPaymentId = uuid.v4();
+
     try {
       if (!savingAmountFormKey.currentState!.validate()) {
+        isProcessing.value = false;
         return;
       }
 
@@ -31,36 +37,48 @@ class AddSavingAmountFormController extends GetxController {
       final parsedAmount = double.parse(amount.text.trim());
 
       if (parsedAmount > savingGoal.goal - savingGoal.currentAmount) {
+        FullScreenLoader.stopLoading();
+        Snackbars.errorSnackbar(
+          title: 'Błąd!',
+          message:
+              'Wprowadziłeś zbyt dużą kwotę. Maksymalna została ustawiona.',
+        );
         amount.text = (savingGoal.goal - savingGoal.currentAmount).toString();
-        throw 'Wprowadziłeś zbyt dużą kwotę';
+        isProcessing.value = false;
+        return;
       }
-      userRepository.addAmount(savingGoal.id, parsedAmount);
+
+      await userRepository.addAmount(savingGoal.id, parsedAmount);
 
       String date = DateTime.now().toString().split(" ")[0];
 
-      userRepository.addSavingGoalPayment(
+      await userRepository.addSavingGoalPayment(
           savingGoal, parsedAmount, date, savingGoalPaymentId);
 
       final ExpenseModel savingGoalExpense = ExpenseModel(
-          id: savingGoalPaymentId,
-          amount: parsedAmount,
-          category: ExpenseCategory.savingsAndInvestments.label,
-          date: date,
-          description: 'Wpłata na cel oszczędnościowy ${savingGoal.title}',
-          expenseType: ExpenseTypeEnum.expense.label,
-          title: 'Cel oszczędnościowy',
-          paymentType: PaymentTypeEnum.other.label);
+        id: savingGoalPaymentId,
+        amount: parsedAmount,
+        category: ExpenseCategory.savingsAndInvestments.label,
+        date: date,
+        description: 'Wpłata na cel oszczędnościowy ${savingGoal.title}',
+        expenseType: ExpenseTypeEnum.expense.label,
+        title: 'Cel oszczędnościowy',
+        paymentType: PaymentTypeEnum.other.label,
+      );
 
-      userRepository.addSavingGoalPaymentToTransactions(savingGoal,
+      await userRepository.addSavingGoalPaymentToTransactions(savingGoal,
           parsedAmount, date, savingGoalPaymentId, savingGoalExpense);
 
-      userRepository.decrementCurrentBalance(parsedAmount);
+      await userRepository.decrementCurrentBalance(parsedAmount);
 
+      amount.clear();
       FullScreenLoader.stopLoading();
       Get.back();
     } catch (e) {
       FullScreenLoader.stopLoading();
       Snackbars.errorSnackbar(title: 'Błąd!', message: e.toString());
+    } finally {
+      isProcessing.value = false;
     }
   }
 }
